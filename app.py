@@ -28,7 +28,7 @@ def manager_login():
         password = request.form['password']
         print(mysql.connection)
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.login WHERE sitenum =%s AND username = %s AND password = %s', (sitenum, username, password,))
+        cursor.execute('SELECT * FROM vitproject.login WHERE Site =%s AND username = %s AND password = %s', (sitenum, username, password,))
         account = cursor.fetchone()
         if account:
             session['loggedin'] = True
