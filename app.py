@@ -23,6 +23,7 @@ def home():
 def manager_login():
     msg = ''
     if request.method == 'POST' and 'sitenum' in request.form and 'username' in request.form and 'password' in request.form:
+        global sitenum
         sitenum = request.form['sitenum']
         username = request.form['username']
         password = request.form['password']
