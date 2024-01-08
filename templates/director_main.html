@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Director Page - ALU Structures</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <button class="nav-button" onclick="location.href='#'">Local Expenditure</button>
+        <button class="nav-button" onclick="location.href='#'">Material Purchase</button>
+        <button class="nav-button" onclick="location.href='#'">Report</button>
+        <button class="nav-button" onclick="location.href='#'">Managers</button>
+        <button class="nav-button" onclick="location.href='#'">Labour</button>
+        <button class="nav-button" onclick="location.href='#'">Staff Salary</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Main Heading -->
+        <h1 class="main-heading">ALU Structures</h1>
+        
+        <!-- Subheading -->
+        <h2 class="sub-heading">Director Page</h2>
+
+        <!-- Company Logo -->
+        <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
+
+        <!-- Welcome Message -->
+        <p class="welcome-message">Welcome</p>
+
+        <!-- User Role -->
+        <p class="user-role-big">General Director</p>
+
+        <!-- Logout Button -->
+        <button class="logout-button" onclick="location.href='#'">Log Out</button>
+    </div>
+</body>
+</html>

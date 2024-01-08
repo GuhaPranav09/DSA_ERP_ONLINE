@@ -7,6 +7,7 @@ body {
     background-color: #232323;
     color: white;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
@@ -15,6 +16,30 @@ body {
 .container {
     text-align: center;
     align-self: center;
+}
+
+.navbar {
+    background-color: rgba(128, 128, 128, 0.5);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.nav-button {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px; /* Add margin between navbar buttons */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Add smooth transitions */
+}
+
+.nav-button:hover {
+    background-color: #808080; /* Grey background on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow on hover */
 }
 
 h2 {
