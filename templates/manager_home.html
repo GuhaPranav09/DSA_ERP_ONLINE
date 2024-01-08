@@ -20,28 +20,10 @@
         </div>
 
         <h2 id="welcome">Welcome</h2>
-        <h1 id="message">Site Manager</h1>
+        <h1 id="message">Site {{ site }} Manager {{ msg }}</h1>
         <button class="button" onclick="location.href='/home'">Log out</button>
     </div></center>
 
-    <script>
-        function navigate(page) {
-            // You can add logic here to navigate to the corresponding pages
-            console.log('Navigating to ' + page);
-        }
-
-        function logout() {
-            // You can add logic here to handle the logout action
-            console.log('Logging out');
-        }
-
-        // Simulate the data from Python variables
-        var siteNum = 1;
-        var username = "GP";
-
-        // Set welcome message dynamically
-        document.getElementById('welcome').innerText = 'Welcome to Site ' + siteNum;
-        document.getElementById('message').innerText = 'Site Manager ' + username;
-    </script>
+    
 </body>
 </html>

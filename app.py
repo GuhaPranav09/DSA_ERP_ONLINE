@@ -34,11 +34,11 @@ def manager_login():
             session['loggedin'] = True
             session['password'] = account['password']
             session['username'] = account['username']
-            return 'Logged in successfully!'
+            return render_template('manager_home.html',msg=session['username'], site=sitenum)
         else:
             msg = 'Incorrect username/password!'
         
-    return render_template('manager_login.html',msg=msg)
+    return render_template('manager_login.html')
 
 @app.route('/manager_register', methods=['GET','POST'])
 def director_login():
