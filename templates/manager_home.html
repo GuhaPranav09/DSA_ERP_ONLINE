@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
+    <title>Manager Home Page</title>
+</head>
+<body><center>
+    <div class="container" id="root">
+
+        <div class="nav-bar">
+            <button class="button" onclick="navigate('local_exp')">Local Expenditure</button>
+            <button class="button" onclick="navigate('material')">Material Purchase</button>
+            <button class="button" onclick="navigate('labour')">Labour</button>
+            <button class="button" onclick="navigate('salary')">Staff-Salary</button>
+            <button class="button" onclick="navigate('report')">Report</button>
+            
+        </div>
+
+        <h2 id="welcome">Welcome</h2>
+        <h1 id="message">Site Manager</h1>
+        <button class="button" onclick="location.href='/home'">Log out</button>
+    </div></center>
+
+    <script>
+        function navigate(page) {
+            // You can add logic here to navigate to the corresponding pages
+            console.log('Navigating to ' + page);
+        }
+
+        function logout() {
+            // You can add logic here to handle the logout action
+            console.log('Logging out');
+        }
+
+        // Simulate the data from Python variables
+        var siteNum = 1;
+        var username = "GP";
+
+        // Set welcome message dynamically
+        document.getElementById('welcome').innerText = 'Welcome to Site ' + siteNum;
+        document.getElementById('message').innerText = 'Site Manager ' + username;
+    </script>
+</body>
+</html>
