@@ -60,8 +60,9 @@ def director_login():
 
     return render_template('director_login.html',msg=msg)
 
-
+@app.route('/d_material_purchase')
+def d_material_purchase():
+    return render_template('d_material_purchase.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
-

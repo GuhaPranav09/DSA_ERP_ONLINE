@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Material Purchase - ALU Structures</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <button class="nav-button" onclick="location.href='#'">Local Expenditure</button>
+        <button class="nav-button" onclick="location.href='#'">Material Purchase</button>
+        <button class="nav-button" onclick="location.href='#'">Report</button>
+        <button class="nav-button" onclick="location.href='#'">Managers</button>
+        <button class="nav-button" onclick="location.href='#'">Labour</button>
+        <button class="nav-button" onclick="location.href='#'">Staff Salary</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Main Heading -->
+        <h1 class="main-heading">ALU Structures</h1>
+        
+        <!-- Subheading -->
+        <h2 class="sub-heading">Material Purchase</h2>
+
+        <!-- Company Logo -->
+        <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
+
+        <!-- Form for Material Purchase -->
+        <form>
+            <!-- Date Selection Input -->
+            <label for="purchase-date">Date:</label>
+            <input type="date" id="purchase-date" name="purchase-date" required>
+
+            <!-- Material Input -->
+            <label for="material-input">Material:</label>
+            <input type="text" id="material-input" name="material-input" required>
+
+            <!-- Quantity Input -->
+            <label for="quantity-input">Quantity:</label>
+            <input type="text" id="quantity-input" name="quantity-input" required>
+
+            <!-- Price Input -->
+            <label for="price-input">Price:</label>
+            <input type="text" id="price-input" name="price-input" required>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="submit">Submit</button>
+                <button type="button">Update</button>
+                <button type="button">Delete</button>
+                <button type="button">Clear</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
