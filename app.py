@@ -40,9 +40,8 @@ def manager_login():
         
     return render_template('manager_login.html',msg=msg)
 
-@app.route('/director_login', methods=['GET','POST'])
+@app.route('/director_login', methods=['GET', 'POST'])
 def director_login():
-
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'sitenum' in request.form:
         username = request.form['username']
@@ -54,11 +53,12 @@ def director_login():
             session['loggedin'] = True
             session['password'] = account['password']
             session['username'] = account['username']
-            return render_template('director_home.html',user=session['username'])
+            return render_template('director_home.html')
         else:
             msg = 'Incorrect username/password!'
 
-    return render_template('director_login.html',msg=msg)
+    return render_template('director_login.html', msg=msg)
+
 
 @app.route('/director_home')
 def director_home():
