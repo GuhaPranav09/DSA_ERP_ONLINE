@@ -99,3 +99,11 @@ a {
 .button:hover {
     background-color: #404040;
 }
+
+.err-msg{
+    color:red;
+}
+
+.msg{
+    color:green;
+}

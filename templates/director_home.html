@@ -11,7 +11,7 @@
     <!-- Navbar -->
     <div class="navbar">
         <button class="nav-button" onclick="location.href='#'">Local Expenditure</button>
-        <button class="nav-button" onclick="location.href='#'">Material Purchase</button>
+        <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
         <button class="nav-button" onclick="location.href='#'">Report</button>
         <button class="nav-button" onclick="location.href='#'">Managers</button>
         <button class="nav-button" onclick="location.href='#'">Labour</button>
@@ -21,22 +21,22 @@
     <!-- Main Content -->
     <div class="container">
         <!-- Main Heading -->
-        <h1 class="main-heading">ALU Structures</h1>
+        <h1 class="Company_Name">ALU Structures</h1>
         
         <!-- Subheading -->
-        <h2 class="sub-heading">Director Page</h2>
+        <h2 class="Page_Name">Director Page</h2>
 
         <!-- Company Logo -->
         <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
 
         <!-- Welcome Message -->
-        <p class="welcome-message">Welcome</p>
+        <h2 class="welcome-message">Welcome</h2>
 
         <!-- User Role -->
-        <p class="user-role-big">General Director</p>
+        <h1 class="message">General Director {{ user }}</h1>
 
         <!-- Logout Button -->
-        <button class="logout-button" onclick="location.href='/home'">Log Out</button>
+        <button class="button" onclick="location.href='/home'">Log Out</button>
     </div>
 </body>
 </html>

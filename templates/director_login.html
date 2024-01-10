@@ -10,16 +10,18 @@
 <body>
     <div class="container">
         <h2>Director Login</h2>
-        <form action="{{ url_for('director_login') }}" method="post" autocomplete="off">
+        <form method="POST" action="{{ url_for('director_login') }}">
             <label for="username">
             </label>
             <input type="text" name="username" placeholder="Username" id="username" required>
             <label for="password">
             </label>
             <input type="password" name="password" placeholder="Password" id="password" required>
-            <div class="msg">{{ msg }}</div>
+            <div class="err-msg">{{ msg }}</div>
             <input type="submit" value="Login" class="button">
+        </form>
         <button class="button" onclick="history.back()">Back</button>
+        <button class="button" onclick="location.href='/director_home'">Home</button>
     </div>
 </body>
 </html>

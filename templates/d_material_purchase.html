@@ -21,38 +21,44 @@
     <!-- Main Content -->
     <div class="container">
         <!-- Main Heading -->
-        <h1 class="main-heading">ALU Structures</h1>
+        <h1 class="Company_Name">ALU Structures</h1>
         
         <!-- Subheading -->
-        <h2 class="sub-heading">Material Purchase</h2>
+        <h2 class="Page_Name">Material Purchase</h2>
 
         <!-- Company Logo -->
         <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
 
         <!-- Form for Material Purchase -->
-        <form>
+        <form method="PUT" action="{{ url_for('d_material_purchase') }}">
+
+            <label for="site-num">Site</label>
+            <input type="text" id="site-num" name="site-num" required>
+
             <!-- Date Selection Input -->
-            <label for="purchase-date">Date:</label>
+            <label for="purchase-date">Date</label>
             <input type="date" id="purchase-date" name="purchase-date" required>
 
             <!-- Material Input -->
-            <label for="material-input">Material:</label>
+            <label for="material-input">Material</label>
             <input type="text" id="material-input" name="material-input" required>
 
             <!-- Quantity Input -->
-            <label for="quantity-input">Quantity:</label>
+            <label for="quantity-input">Quantity</label>
             <input type="text" id="quantity-input" name="quantity-input" required>
 
             <!-- Price Input -->
-            <label for="price-input">Price:</label>
+            <label for="price-input">Price</label>
             <input type="text" id="price-input" name="price-input" required>
-
+            
+            <div class="msg">{{ msg }}</div>
+            
             <!-- Action Buttons -->
             <div class="action-buttons">
-                <button type="submit">Submit</button>
-                <button type="button">Update</button>
-                <button type="button">Delete</button>
-                <button type="button">Clear</button>
+                <button class="button" type="submit">Submit</button>
+                <button class="button" type="button">Update</button>
+                <button class="button" type="button">Delete</button>
+                <button class="button" type="button">Clear</button>
             </div>
         </form>
     </div>

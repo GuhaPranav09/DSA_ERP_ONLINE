@@ -34,7 +34,7 @@ def manager_login():
             session['loggedin'] = True
             session['password'] = account['password']
             session['username'] = account['username']
-            return render_template('manager_home.html',msg=session['username'], site=sitenum)
+            return render_template('manager_home.html',user=session['username'], site=sitenum)
         else:
             msg = 'Incorrect username/password!'
         
@@ -54,15 +54,43 @@ def director_login():
             session['loggedin'] = True
             session['password'] = account['password']
             session['username'] = account['username']
-            return render_template('director_home.html',msg=session['username'])
+            return render_template('director_home.html',user=session['username'])
         else:
             msg = 'Incorrect username/password!'
 
     return render_template('director_login.html',msg=msg)
 
+@app.route('/director_home')
+def director_home():
+    return render_template('director_home.html',user="GP")
+
 @app.route('/d_material_purchase')
 def d_material_purchase():
-    return render_template('d_material_purchase.html')
+    msg=''
+    if request.method == 'PUT' and 'site-num' in request.form and 'purchase-date' in request.form and 'material-input' in request.form and 'quantity-input' in request.form and 'price-input' in request.form:
+        global sitenum
+        sitenum = request.form['site-num']
+        date = request.form['purchase-date']
+        material = request.form['material-input']
+        quantity = request.form['material-input']
+        price = request.form['material-input']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM vitproject.login WHERE DOB = %s AND Material=%s AND Site=%s', (date, material, sitenum))
+        record = cursor.fetchone()
+        if not record:
+            insert_query = "insert into purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
+            data = (sitenum,date,material,quantity,price)
+            cursor.execute(insert_query, data)
+            mysql.connection.commit()
+            msg = 'Insertion Succesful'
+            return render_template('d_material_purchase.html',msg=msg)
+        else:
+            msg = 'Record with date and material exists!'
+
+    
+    return render_template('d_material_purchase.html',msg=msg)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

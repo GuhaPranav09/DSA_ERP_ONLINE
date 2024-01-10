@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <h2>Manager Login</h2>
-        <form method="POST" action="{{ url_for('manager_login') }}" method="post">
+        <form method="POST" action="{{ url_for('manager_login') }}">
             <label for="sitenum">
             </label>
             <input type="text" name="sitenum" placeholder="Site Number" id="sitenum" required>
@@ -20,11 +20,10 @@
             <label for="password">
             </label>
             <input type="password" name="password" placeholder="Password" id="password" required>
-            <div class="msg">{{ msg }}</div>
+            <div class="err-msg">{{ msg }}</div>
             <input type="submit" value="Login" class="button">
         </form>
         <button class="button" onclick="history.back()">Back</button>
-        <button class="button" onclick="location.href='/manager_home'">Home</button>
     </div>
 </body>
 </html>
