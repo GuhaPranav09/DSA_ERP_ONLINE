@@ -72,13 +72,13 @@ def d_material_purchase():
         sitenum = request.form['site-num']
         date = request.form['purchase-date']
         material = request.form['material-input']
-        quantity = request.form['material-input']
-        price = request.form['material-input']
+        quantity = request.form['quantity-input']
+        price = request.form['price-input']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.login WHERE DOB = %s AND Material=%s AND Site=%s', (date, material, sitenum))
+        cursor.execute('SELECT * FROM vitproject.purchase WHERE DOB = %s AND Material=%s AND Site=%s', (date, material, sitenum))
         record = cursor.fetchone()
         if not record:
-            insert_query = "insert into purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
+            insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
             data = (sitenum,date,material,quantity,price)
             cursor.execute(insert_query, data)
             mysql.connection.commit()
@@ -86,9 +86,33 @@ def d_material_purchase():
             return render_template('d_material_purchase.html',msg=msg)
         else:
             msg = 'Record with date and material exists!'
+        
+    return render_template('d_material_purchase.html',msg=msg)
+
+@app.route('/d_local_expenditure')
+def d_local_expenditure():
+    msg=''
+    if request.method == 'PUT' and 'site-num' in request.form and 'exp-date' in request.form and 'activity-input' in request.form and 'amount-input' in request.form:
+        global sitenum
+        sitenum = request.form['site-num']
+        date = request.form['exp-date']
+        activity = request.form['activity-input']
+        amount = request.form['amount-input']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE DOB = %s AND Activty=%s AND Site=%s', (date, activity, sitenum))
+        record = cursor.fetchone()
+        if not record:
+            insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
+            data = (sitenum,date,activity,amount)
+            cursor.execute(insert_query, data)
+            mysql.connection.commit()
+            msg = 'Insertion Succesful'
+            return render_template('d_local_expenditure.html',msg=msg)
+        else:
+            msg = 'Record with date and activity exists!'
 
     
-    return render_template('d_material_purchase.html',msg=msg)
+    return render_template('d_local_expenditure.html',msg=msg)
 
 
 
