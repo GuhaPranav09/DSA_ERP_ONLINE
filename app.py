@@ -43,7 +43,7 @@ def manager_login():
 @app.route('/director_login', methods=['GET', 'POST'])
 def director_login():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'sitenum' in request.form:
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
