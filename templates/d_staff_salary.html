@@ -5,17 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Material Purchase - ALU Structures</title>
+    <title>Staff Salary - ALU Structures</title>
 </head>
 <body>
     <!-- Navbar -->
     <div class="navbar">
         <button class="nav-button" onclick="location.href='/d_local_expenditure'">Local Expenditure</button>
-        <button class="nav-button" onclick="location.href='#'">Material Purchase</button>
+        <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
         <button class="nav-button" onclick="location.href='#'">Report</button>
         <button class="nav-button" onclick="location.href='/d_manager_accounts'">Managers</button>
         <button class="nav-button" onclick="location.href='/d_labour'">Labour</button>
-        <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
+        <button class="nav-button" onclick="location.href='#'">Staff Salary</button>
     </div>
 
     <!-- Main Content -->
@@ -24,13 +24,13 @@
         <h1 class="Company_Name">ALU Structures</h1>
         
         <!-- Subheading -->
-        <h2 class="Page_Name">Material Purchase</h2>
+        <h2 class="Page_Name">Staff Salary</h2>
 
         <!-- Company Logo -->
         <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
 
         <!-- Form for Material Purchase -->
-        <form method="POST" action="{{ url_for('d_material_purchase') }}">
+        <form method="POST" action="{{ url_for('d_staff_salary') }}">
 
             <table>
             <tr>
@@ -38,28 +38,24 @@
                 <td><input type="text" id="site-num" name="site-num" required></td>
             </tr>
 
-            <!-- Date Selection Input -->
+            <!-- Name Input -->
             <tr>
-                <td><label for="purchase-date">Date</label></td>
-                <td><input type="date" id="purchase-date" name="purchase-date" required></td>
-
-            <!-- Material Input -->
-            <tr>
-                <td><label for="material-input">Material</label></td>
-                <td><input type="text" id="material-input" name="material-input" required></td>
+                <td><label for="name-input">Name</label></td>
+                <td><input type="text" id="name-input" name="name-input" required></td>
             </tr>
 
-            <!-- Quantity Input -->
+            <!-- ID Input -->
             <tr>
-                <td><label for="quantity-input">Quantity</label></td>
-                <td><input type="text" id="quantity-input" name="quantity-input" required></td>
+                <td><label for="empid-input">Employee ID</label></td>
+                <td><input type="text" id="empid-input" name="empid-input" required></td>
             </tr>
 
-            <!-- Price Input -->
+            <!-- Salary Input -->
             <tr>
-                <td><label for="price-input">Price</label></td>
-                <td><input type="text" id="price-input" name="price-input" required></td>
+                <td><label for="salary-input">Salary</label></td>
+                <td><input type="text" id="salary-input" name="salary-input" required></td>
             </tr>
+
             </table>
             
             <div class="msg">{{ msg }}</div>

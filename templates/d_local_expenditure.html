@@ -13,9 +13,9 @@
         <button class="nav-button" onclick="location.href='#'">Local Expenditure</button>
         <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
         <button class="nav-button" onclick="location.href='#'">Report</button>
-        <button class="nav-button" onclick="location.href='#'">Managers</button>
-        <button class="nav-button" onclick="location.href='#'">Labour</button>
-        <button class="nav-button" onclick="location.href='#'">Staff Salary</button>
+        <button class="nav-button" onclick="location.href='/d_manager_accounts'">Managers</button>
+        <button class="nav-button" onclick="location.href='/d_labour'">Labour</button>
+        <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
     </div>
 
     <!-- Main Content -->
@@ -30,24 +30,34 @@
         <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
 
         <!-- Form for Material Purchase -->
-        <form method="PUT" action="{{ url_for('d_local_expenditure') }}">
+        <form method="POST" action="{{ url_for('d_local_expenditure') }}">
 
-            <label for="site-num">Site</label>
-            <input type="text" id="site-num" name="site-num" required>
+            <table>
+            <tr>
+                <td><label for="site-num">Site</label></td>
+                <td><input type="text" id="site-num" name="site-num" required></td>
+            </tr>
 
             <!-- Date Selection Input -->
-            <label for="exp-date">Date</label>
-            <input type="date" id="exp-date" name="exp-date" required>
+            <tr>
+                <td><label for="exp-date">Date</label></td>
+                <td><input type="date" id="exp-date" name="exp-date" required></td>
+            </tr>
 
-            <!-- Material Input -->
-            <label for="activity-input">Material</label>
-            <input type="text" id="activity-input" name="activity-input" required>
+            <!-- Activity Input -->
+            <tr>
+                <td><label for="activity-input">Activity</label></td>
+                <td><input type="text" id="activity-input" name="activity-input" required></td>
+            </tr>
 
-            <!-- Price Input -->
-            <label for="amount-input">Price</label>
-            <input type="text" id="amount-input" name="amount-input" required>
+            <!-- Amount Input -->
+            <tr>
+                <td><label for="amount-input">Amount</label></td>
+                <td><input type="text" id="amount-input" name="amount-input" required></td>
+            </tr>
             
             <div class="msg">{{ msg }}</div>
+            </table>
             
             <!-- Action Buttons -->
             <div class="action-buttons">

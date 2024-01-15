@@ -53,21 +53,17 @@ def director_login():
             session['loggedin'] = True
             session['password'] = account['password']
             session['username'] = account['username']
-            return render_template('director_home.html')
+            return render_template('director_home.html', user=session['username'])
         else:
             msg = 'Incorrect username/password!'
 
     return render_template('director_login.html', msg=msg)
 
 
-@app.route('/director_home')
-def director_home():
-    return render_template('director_home.html',user="GP")
-
-@app.route('/d_material_purchase')
+@app.route('/d_material_purchase', methods=['GET', 'POST','PUT'])
 def d_material_purchase():
     msg=''
-    if request.method == 'PUT' and 'site-num' in request.form and 'purchase-date' in request.form and 'material-input' in request.form and 'quantity-input' in request.form and 'price-input' in request.form:
+    if request.method == 'POST' and 'site-num' in request.form and 'purchase-date' in request.form and 'material-input' in request.form and 'quantity-input' in request.form and 'price-input' in request.form:
         global sitenum
         sitenum = request.form['site-num']
         date = request.form['purchase-date']
@@ -89,17 +85,17 @@ def d_material_purchase():
         
     return render_template('d_material_purchase.html',msg=msg)
 
-@app.route('/d_local_expenditure')
+@app.route('/d_local_expenditure', methods=['GET', 'POST','PUT'])
 def d_local_expenditure():
     msg=''
-    if request.method == 'PUT' and 'site-num' in request.form and 'exp-date' in request.form and 'activity-input' in request.form and 'amount-input' in request.form:
+    if request.method == 'POST' and 'site-num' in request.form and 'exp-date' in request.form and 'activity-input' in request.form and 'amount-input' in request.form:
         global sitenum
         sitenum = request.form['site-num']
         date = request.form['exp-date']
         activity = request.form['activity-input']
         amount = request.form['amount-input']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.expenditure WHERE DOB = %s AND Activty=%s AND Site=%s', (date, activity, sitenum))
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE DOB = %s AND Activity=%s AND Site=%s', (date, activity, sitenum))
         record = cursor.fetchone()
         if not record:
             insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
@@ -114,7 +110,56 @@ def d_local_expenditure():
     
     return render_template('d_local_expenditure.html',msg=msg)
 
+@app.route('/d_staff_salary', methods=['GET', 'POST','PUT'])
+def d_staff_salary():
+    msg=''
+    if request.method == 'POST' and 'site-num' in request.form and 'name-input' in request.form and 'empid-input' in request.form and 'salary-input' in request.form:
+        global sitenum
+        sitenum = request.form['site-num']
+        name = request.form['name-input']
+        empid = request.form['empid-input']
+        salary = request.form['salary-input']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM vitproject.salary WHERE EmpID=%s AND Site=%s', (empid, sitenum))
+        record = cursor.fetchone()
+        if not record:
+            insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
+            data = (sitenum,name,empid,salary)
+            cursor.execute(insert_query, data)
+            mysql.connection.commit()
+            msg = 'Insertion Succesful'
+            return render_template('d_staff_salary.html',msg=msg)
+        else:
+            msg = 'Record with date and Employee exists!'
+        
+    return render_template('d_staff_salary.html',msg=msg)
 
+@app.route('/d_manager_accounts', methods=['GET', 'POST','PUT'])
+def d_manager_accounts():
+    msg=''
+    if request.method == 'POST' and 'site-num' in request.form and 'username-input' in request.form and 'password-input' in request.form:
+        global sitenum
+        sitenum = request.form['site-num']
+        username = request.form['username-input']
+        password = request.form['password-input']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM vitproject.login WHERE Username=%s AND Site=%s', (username, sitenum))
+        record = cursor.fetchone()
+        if not record:
+            insert_query = "insert into vitproject.login (Site, Username, Password) values (%s, %s, %s)"
+            data = (sitenum,username,password)
+            cursor.execute(insert_query, data)
+            mysql.connection.commit()
+            msg = 'Insertion Succesful'
+            return render_template('d_manager_accounts.html',msg=msg)
+        else:
+            msg = 'Record with date and Employee exists!'
+        
+    return render_template('d_manager_accounts.html',msg=msg)
+
+@app.route('/d_labour')
+def d_labour():
+    return render_template('d_labour.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
