@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, url_for, redirect
+from flask import Flask, render_template, request, session, url_for, redirect, flash
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -85,6 +85,30 @@ def d_material_purchase():
         
     return render_template('d_material_purchase.html',msg=msg)
 
+@app.route('/m_material_purchase', methods=['GET', 'POST','PUT'])
+def m_material_purchase():
+    msg=''
+    if request.method == 'POST' and 'purchase-date' in request.form and 'material-input' in request.form and 'quantity-input' in request.form and 'price-input' in request.form:
+        date = request.form['purchase-date']
+        material = request.form['material-input']
+        quantity = request.form['quantity-input']
+        price = request.form['price-input']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM vitproject.purchase WHERE DOB = %s AND Material=%s AND Site=%s', (date, material, sitenum))
+        record = cursor.fetchone()
+        if not record:
+            insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
+            data = (sitenum,date,material,quantity,price)
+            cursor.execute(insert_query, data)
+            mysql.connection.commit()
+            msg = 'Insertion Succesful'
+            return render_template('m_material_purchase.html',msg=msg, Site=sitenum)
+        else:
+            msg = 'Record with date and material exists!'
+        
+    return render_template('m_material_purchase.html',msg=msg, Site=sitenum)
+
+
 @app.route('/d_local_expenditure', methods=['GET', 'POST','PUT'])
 def d_local_expenditure():
     msg=''
@@ -106,9 +130,30 @@ def d_local_expenditure():
             return render_template('d_local_expenditure.html',msg=msg)
         else:
             msg = 'Record with date and activity exists!'
-
     
     return render_template('d_local_expenditure.html',msg=msg)
+
+@app.route('/m_local_expenditure', methods=['GET', 'POST','PUT'])
+def m_local_expenditure():
+    msg=''
+    if request.method == 'POST' and 'exp-date' in request.form and 'activity-input' in request.form and 'amount-input' in request.form:
+        date = request.form['exp-date']
+        activity = request.form['activity-input']
+        amount = request.form['amount-input']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE DOB = %s AND Activity=%s AND Site=%s', (date, activity, sitenum))
+        record = cursor.fetchone()
+        if not record:
+            insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
+            data = (sitenum,date,activity,amount)
+            cursor.execute(insert_query, data)
+            mysql.connection.commit()
+            msg = 'Insertion Succesful'
+            return render_template('m_local_expenditure.html',msg=msg, Site=sitenum)
+        else:
+            msg = 'Record with date and activity exists!'
+    
+    return render_template('m_local_expenditure.html',msg=msg, Site=sitenum)
 
 @app.route('/d_staff_salary', methods=['GET', 'POST','PUT'])
 def d_staff_salary():
@@ -134,6 +179,28 @@ def d_staff_salary():
         
     return render_template('d_staff_salary.html',msg=msg)
 
+@app.route('/m_staff_salary', methods=['GET', 'POST','PUT'])
+def m_staff_salary():
+    msg=''
+    if request.method == 'POST' and 'name-input' in request.form and 'empid-input' in request.form and 'salary-input' in request.form:
+        name = request.form['name-input']
+        empid = request.form['empid-input']
+        salary = request.form['salary-input']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM vitproject.salary WHERE EmpID=%s AND Site=%s', (empid, sitenum))
+        record = cursor.fetchone()
+        if not record:
+            insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
+            data = (sitenum,name,empid,salary)
+            cursor.execute(insert_query, data)
+            mysql.connection.commit()
+            msg = 'Insertion Succesful'
+            return render_template('m_staff_salary.html',msg=msg, Site=sitenum)
+        else:
+            msg = 'Record with date and Employee exists!'
+        
+    return render_template('m_staff_salary.html',msg=msg, Site=sitenum)
+
 @app.route('/d_manager_accounts', methods=['GET', 'POST','PUT'])
 def d_manager_accounts():
     msg=''
@@ -157,9 +224,68 @@ def d_manager_accounts():
         
     return render_template('d_manager_accounts.html',msg=msg)
 
-@app.route('/d_labour')
+@app.route('/d_labour', methods=['GET', 'POST','PUT'])
 def d_labour():
-    return render_template('d_labour.html')
+    msg=''
+    if request.method == 'POST' and 'site-num' in request.form and 'name-input' in request.form and 'empid-input' in request.form and 'joining-date' in request.form and 'gender-input' in request.form and 'address-input' in request.form and 'designation-input' in request.form:
+        if 'languages-input' in request.form:
+            global sitenum
+            sitenum = request.form['site-num']
+            name = request.form['name-input']
+            empid = request.form['empid-input']
+            joining_date = request.form['joining-date']
+            gender = request.form['gender-input']
+            languages = request.form.getlist('languages-input')
+            address = request.form['address-input']
+            designation = request.form['designation-input']
+
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM vitproject.labour WHERE Site=%s AND empid=%s', (sitenum, empid))
+            record = cursor.fetchone()
+
+            if not record:
+                insert_query = "INSERT INTO vitproject.labour (Site, Name, EmpID, DOB, Gender, Languages, Address, Designation) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                data = (sitenum, name, empid, joining_date, gender, ",".join(languages), address, designation)
+                cursor.execute(insert_query, data)
+                mysql.connection.commit()
+                msg = 'Insertion Successful'
+            else:
+                msg = 'Record with Employee ID already exists!'
+        else:
+            msg= 'Select atleast one language!'
+
+    return render_template('d_labour.html', msg=msg)
+
+@app.route('/m_labour', methods=['GET', 'POST','PUT'])
+def m_labour():
+    msg=''
+    if request.method == 'POST' and 'name-input' in request.form and 'empid-input' in request.form and 'joining-date' in request.form and 'gender-input' in request.form and 'address-input' in request.form and 'designation-input' in request.form:
+        if 'languages-input' in request.form: 
+            name = request.form['name-input']
+            empid = request.form['empid-input']
+            joining_date = request.form['joining-date']
+            gender = request.form['gender-input']
+            languages = request.form.getlist('languages-input')
+            address = request.form['address-input']
+            designation = request.form['designation-input']
+            print(gender)
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM vitproject.labour WHERE Site=%s AND EmpID=%s', (sitenum,empid))
+            record = cursor.fetchone()
+
+            if not record:
+                insert_query = "INSERT INTO vitproject.labour (Site, Name, EmpID, DOB, Gender, Languages, Address, Designation) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                data = (sitenum, name, empid, joining_date, gender, ",".join(languages), address, designation)
+                cursor.execute(insert_query, data)
+                mysql.connection.commit()
+                msg = 'Insertion Successful'
+            else:
+                msg = 'Record with Employee ID already exists!'
+        else:
+            msg = 'Select atleast one language!'
+        
+    return render_template('m_labour.html', msg=msg, Site=sitenum)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -21,10 +21,9 @@ body {
     align-self: center;
 }
 
-.navbar {
+nav {
     background-color: rgba(128, 128, 128, 0.5);
-    display: flex;
-    justify-content: space-around;
+    text-align: center;
     padding: 10px;
 }
 

@@ -8,18 +8,18 @@
     <title>Labour Details - ALU Structures</title>
 </head>
 <body>
+    <header></header>
     <!-- Navbar -->
-    <div class="navbar">
+    <nav class="navbar">
         <button class="nav-button" onclick="location.href='/d_local_expenditure'">Local Expenditure</button>
         <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
         <button class="nav-button" onclick="location.href='#'">Report</button>
         <button class="nav-button" onclick="location.href='/d_manager_accounts'">Managers</button>
         <button class="nav-button" onclick="location.href='#'">Labour</button>
         <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
-    </div>
-
+    </nav>
     <!-- Main Content -->
-    <div class="container">
+    <sectiion class="container">
         <!-- Main Heading -->
         <h1 class="Company_Name">ALU Structures</h1>
         
@@ -59,9 +59,9 @@
             <tr>
                 <td><label for="gender-input">Gender</label></td>
                 <td style="display: inline-flex;">
-                    <input type="radio" value="male-gender" name="gender-input" required>Male
-                    <input type="radio" value="female-gender" name="gender-input" >Female<br>
-                    <input type="radio" value="other-gender" name="gender-input" >Other
+                    <input type="radio" value="Male" name="gender-input" required>Male
+                    <input type="radio" value="Female" name="gender-input" >Female<br>
+                    <input type="radio" value="Other" name="gender-input" >Other
                 </td>
             </tr>
 
@@ -108,6 +108,6 @@
                 <input class="button" type="reset">
             </div>
         </form>
-    </div>
+    </section>
 </body>
 </html>
