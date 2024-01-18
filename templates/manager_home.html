@@ -11,15 +11,15 @@
     <div class="container" id="root">
 
         <div class="navbar">
-            <button class="nav-button" onclick="navigate('local_exp')">Local Expenditure</button>
-            <button class="nav-button" onclick="navigate('material')">Material Purchase</button>
-            <button class="nav-button" onclick="navigate('labour')">Labour</button>
-            <button class="nav-button" onclick="navigate('salary')">Staff-Salary</button>
+            <button class="nav-button" onclick="location.href='/m_local_expenditure'">Local Expenditure</button>
+            <button class="nav-button" onclick="location.href='/m_material_purchase'">Material Purchase</button>
+            <button class="nav-button" onclick="location.href='/m_labour'">Labour</button>
+            <button class="nav-button" onclick="location.href='/m_staff_salary'">Staff-Salary</button>
             <button class="nav-button" onclick="navigate('report')">Report</button>
             
         </div>
         <h1 class="Company_Name">ALU Structures</h1>
-        <h2 class="Page_Name">Director Page</h2>
+        <h2 class="Page_Name">Manager Page</h2>
         <img class="logo" src="static/company_logo.png" alt="Company Logo" class="logo"><br>
         <h2 class="welcome-message">Welcome</h2>
         <h1 class="message">Site {{ site }} Manager {{ user }}</h1>
