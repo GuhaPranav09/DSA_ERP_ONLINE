@@ -238,19 +238,31 @@ def d_labour():
             languages = request.form.getlist('languages-input')
             address = request.form['address-input']
             designation = request.form['designation-input']
+            choice = request.form['HiddenField']
 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM vitproject.labour WHERE Site=%s AND empid=%s', (sitenum, empid))
             record = cursor.fetchone()
-
-            if not record:
-                insert_query = "INSERT INTO vitproject.labour (Site, Name, EmpID, DOB, Gender, Languages, Address, Designation) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-                data = (sitenum, name, empid, joining_date, gender, ",".join(languages), address, designation)
-                cursor.execute(insert_query, data)
-                mysql.connection.commit()
-                msg = 'Insertion Successful'
+            print(choice,choice,choice)
+            if choice=='1':
+                print('Hello')
+                if not record:
+                    insert_query = "INSERT INTO vitproject.labour (Site, Name, EmpID, DOB, Gender, Languages, Address, Designation) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                    data = (sitenum, name, empid, joining_date, gender, ",".join(languages), address, designation)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+                    msg = 'Insertion Successful'
+                else:
+                    msg = 'Record with Employee ID already exists!'
             else:
-                msg = 'Record with Employee ID already exists!'
+                if record:
+                    update_query = "UPDATE vitproject.labour SET Site=%s AND Name=%s AND DOB=%s AND Gender=%s AND Languages=%s AND Address=%s AND Designation=%s WHERE EmpID=%s"
+                    data = (sitenum, name, joining_date, gender, ",".join(languages), address, designation,empid)
+                    cursor.execute(update_query, data)
+                    mysql.connection.commit()
+                    msg = 'Updation Successful'
+                else:
+                    msg = 'Record with Employee ID doesnt exist!'
         else:
             msg= 'Select atleast one language!'
 
