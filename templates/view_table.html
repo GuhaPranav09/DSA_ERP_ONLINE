@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{{ table_name | title }} Table - ALU Structures</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .table-container {
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .control-container {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        select {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .delete-button {
+            padding: 10px;
+            background-color: #ff0000;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <h1>{{ table_name | title }} Table</h1>
+        {% if msg %}
+            <p>{{ msg }}</p>
+        {% else %}
+            <table border="1">
+                <tr>
+                    {% for column in data[0].keys() %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in data %}
+                    <tr>
+                        {% for value in row.values() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+
+    <div class="control-container">
+        <select>
+            <option value="placeholder1">Placeholder 1</option>
+            <option value="placeholder2">Placeholder 2</option>
+            <option value="placeholder3">Placeholder 3</option>
+        </select>
+        
+        <div class="button-container">
+            <button class="delete-button">Delete Record</button>
+        </div>
+    </div>
+</body>
+</html>

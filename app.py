@@ -286,6 +286,23 @@ def m_labour():
         
     return render_template('m_labour.html', msg=msg, Site=sitenum)
 
+@app.route('/view_table/<table_name>')
+def view_table(table_name):
+    msg = ''
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(f'SELECT * FROM vitproject.{table_name}')
+        data = cursor.fetchall()
+        if data:
+            return render_template('view_table.html', table_name=table_name, data=data)
+        else:
+            msg = f'No data found in the {table_name} table.'
+    except Exception as e:
+        msg = f'Error: {str(e)}'
+
+    return render_template('view_table.html', table_name=table_name, msg=msg)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
