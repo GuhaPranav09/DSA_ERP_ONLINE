@@ -73,7 +73,7 @@ def d_material_purchase():
         choice = request.form['HiddenField']
         tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.purchase WHERE DOB = %s AND Material=%s AND Site=%s', (date, material, sitenum))
+        cursor.execute('SELECT * FROM vitproject.purchase WHERE T_ID=%s', (tid,))
         record = cursor.fetchone()
         if choice=='1':
             insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
@@ -83,14 +83,17 @@ def d_material_purchase():
             msg = 'Insertion Succesful'
             return render_template('d_material_purchase.html',msg=msg)
         else:
-            if 'tid' in request.form:
-                update_query = "UPDATE vitproject.purchase SET Site=%s AND DOB=%s AND Material=%s AND Quantity=%s AND Price=%s WHERE T_ID=%s"
-                data = (sitenum, date, material,quantity,tid)
-                cursor.execute(update_query, data)
-                mysql.connection.commit()
-                msg = 'Updation Successful'
+            if record:
+                if 'tid' in request.form:
+                    update_query = "UPDATE vitproject.purchase SET Site=%s AND DOB=%s AND Material=%s AND Quantity=%s AND Price=%s WHERE T_ID=%s"
+                    data = (sitenum, date, material,quantity,tid)
+                    cursor.execute(update_query, data)
+                    mysql.connection.commit()
+                    msg = 'Updation Successful'
+                else:
+                    msg = 'Enter T_ID for Updation!'
             else:
-                msg = 'Enter T_ID for Updation!'
+                msg = 'Record doesnt exist in Site {}'.format(sitenum)
         
     return render_template('d_material_purchase.html',msg=msg)
 
@@ -130,7 +133,7 @@ def d_local_expenditure():
         choice = request.form['HiddenField']
         tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.expenditure WHERE DOB = %s AND Activity=%s AND Site=%s', (date, activity, sitenum))
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID', (tid,))
         record = cursor.fetchone()
         if choice=='1':
             insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
@@ -140,14 +143,17 @@ def d_local_expenditure():
             msg = 'Insertion Succesful'
             return render_template('d_local_expenditure.html',msg=msg)
         else:
-            if 'tid' in request.form:
-                update_query = "UPDATE vitproject.expenditure SET Site=%s AND DOB=%s AND Activity=%s AND Amount=%s WHERE T_ID=%s"
-                data = (sitenum, date, activity,amount,tid)
-                cursor.execute(update_query, data)
-                mysql.connection.commit()
-                msg = 'Updation Successful'
+            if record:
+                if 'tid' in request.form:
+                    update_query = "UPDATE vitproject.expenditure SET Site=%s AND DOB=%s AND Activity=%s AND Amount=%s WHERE T_ID=%s"
+                    data = (sitenum, date, activity,amount,tid)
+                    cursor.execute(update_query, data)
+                    mysql.connection.commit()
+                    msg = 'Updation Successful'
+                else:
+                    msg = 'Enter T_ID for Updation!'
             else:
-                msg = 'Enter T_ID for Updation!'
+                msg='Record not found in Site {}'.format(sitenum)
     
     return render_template('d_local_expenditure.html',msg=msg)
 
