@@ -120,5 +120,9 @@ a {
 }
 
 .msg{
-    color:green;
+    color:rgb(255, 255, 255);
+}
+
+.report-msg{
+    color:green
 }
