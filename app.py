@@ -16,7 +16,7 @@ mysql = MySQL(app)
 
 @app.route('/home')
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 @app.route('/manager_login', methods=['GET','POST'])
@@ -380,7 +380,85 @@ def view_table(table_name):
 
     return render_template('view_table.html', table_name=table_name, msg=msg)
 
+@app.route('/d_report', methods=['GET', 'POST','PUT'])
+def d_report():
+    msg=''
+    if request.method=='POST' and 'site-num' in request.form and 'year' in request.form and 'month' in request.form:
+        global sitenum
+        sitenum=request.form['site-num']
+        category=request.form['category']
+        year=request.form['year']
+        month=request.form['month']
 
+        if category == "Expenditure":
+            table_name = "expenditure"
+            column_name = "Amount"
+        elif category == "Purchase":
+            table_name = "purchase"
+            column_name = "Price"
+
+        if year == "All Years":
+                year_condition = "1"  # Always true
+        else:
+            year_condition = f"YEAR(DOB) = {year}"
+
+        if month == "Overall":
+            month_condition = ""
+        else:
+            month_condition = f"AND MONTH(DOB) = {month}"  # Extract the month number
+
+        query = f"SELECT SUM({column_name}) FROM {table_name} WHERE {year_condition} {month_condition} AND Site = {sitenum}"
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(query)
+        if category == "Expenditure":
+            result = cursor.fetchone()['SUM(Amount)']
+        else:
+            result = cursor.fetchone()['SUM(Amount)']
+
+        if result is not None: 
+            msg =f"Total {category} amount for Site {sitenum} {month} {year}: {result} Rs"
+        else:
+            msg = f"No {category} data available for Site {sitenum} {month} {year}"
+    return render_template('d_report.html', msg=msg)
+
+@app.route('/m_report', methods=['GET', 'POST','PUT'])
+def m_report():
+    msg=''
+    if request.method=='POST' and 'year' in request.form and 'month' in request.form:
+        category=request.form['category']
+        year=request.form['year']
+        month=request.form['month']
+
+        if category == "Expenditure":
+            table_name = "expenditure"
+            column_name = "Amount"
+        elif category == "Purchase":
+            table_name = "purchase"
+            column_name = "Price"
+
+        if year == "All Years":
+                year_condition = "1"  # Always true
+        else:
+            year_condition = f"YEAR(DOB) = {year}"
+
+        if month == "Overall":
+            month_condition = ""
+        else:
+            month_condition = f"AND MONTH(DOB) = {month}"  # Extract the month number
+
+        query = f"SELECT SUM({column_name}) FROM {table_name} WHERE {year_condition} {month_condition} AND Site = {sitenum}"
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(query)
+        if category == "Expenditure":
+            result = cursor.fetchone()['SUM(Amount)']
+        else:
+            result = cursor.fetchone()['SUM(Amount)']
+
+        if result is not None: 
+            msg =f"Total {category} amount for Site {sitenum} {month} {year}: {result} Rs"
+        else:
+            msg = f"No {category} data available for Site {sitenum} {month} {year}"
+    return render_template('m_report.html', msg=msg, Site=sitenum)
 
 if __name__ == '__main__':
     app.run(debug=True)
