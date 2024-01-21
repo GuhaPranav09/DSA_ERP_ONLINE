@@ -18,8 +18,9 @@
         <button class="nav-button" onclick="location.href='#'">Labour</button>
         <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
     </nav>
+
     <!-- Main Content -->
-    <div class="container">
+    <div class="container" style="padding-top: 200px;">
         <!-- Main Heading -->
         <h1 class="Company_Name">ALU Structures</h1>
         
@@ -102,10 +103,9 @@
             <div class="msg">{{ msg }}</div>
             
             <!-- Action Buttons -->
-            <div class="action-buttons">
+            <div class="action-buttons" style="padding-bottom: 50px;">
                 <button class="button" type="submit">Submit</button>
                 <button class="button" type="submit" onclick="update()">Update</button>
-                <button class="button" type="button">Delete</button>
                 <button class="button" type="button" onclick="location.href='/view_table/labour'">View</button>
                 <button class="button" type="reset">Reset</button>
             </div>

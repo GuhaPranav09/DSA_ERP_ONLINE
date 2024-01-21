@@ -42,7 +42,7 @@
     <div class="left-container">
         <h1>{{ table_name | title }} Table</h1>
         {% if msg %}
-            <p id="message">{{ msg }}</p>
+            <p>{{ msg }}</p>
         {% else %}
             <table border="1">
                 <tr>
@@ -62,21 +62,13 @@
     </div>
 
     <div class="right-container">
-        <form method="POST">
-            <label for="t-id-input">Enter T_ID:</label>
-            <input type="text" id="t-id-input" name="t-id-input" placeholder="Type T_ID here" required>
-            <button type="submit" name="delete-record" class="delete-button">Delete Record</button>
-        </form>
+        <select>
+            <option value="placeholder1">Placeholder 1</option>
+            <option value="placeholder2">Placeholder 2</option>
+            <option value="placeholder3">Placeholder 3</option>
+        </select>
+        
+        <button class="delete-button">Delete Record</button>
     </div>
-
-    <script>
-        // Auto-refresh after 3 seconds only if the message is "Record deleted!"
-        setTimeout(function() {
-            var messageElement = document.getElementById("message");
-            if (messageElement && messageElement.innerText.trim() === "Record deleted!") {
-                location.reload();
-            }
-        }, 3000);
-    </script>
 </body>
 </html>
