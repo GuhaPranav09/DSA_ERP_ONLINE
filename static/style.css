@@ -7,7 +7,9 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #232323;
+    background-image: url('bg.jpg');
+    background-size: cover;
+    background-position: center;
     color: white;
     display: flex;
     flex-direction: column;
@@ -22,9 +24,14 @@ body {
 }
 
 nav {
-    background-color: rgba(128, 128, 128, 0.5);
+    background-color: rgba(21, 21, 43, 0.8);
     text-align: center;
     padding: 10px;
+    position: fixed; /* Make the navbar fixed */
+    top: 0; /* Position it at the top of the screen */
+    left: 0; /* Align it to the left */
+    width: 100%; /* Make it span the entire width */
+    z-index: 1000; /* Set a higher z-index to ensure it appears above other elements */
 }
 
 .nav-button {
@@ -35,13 +42,13 @@ nav {
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    margin-right: 10px; /* Add margin between navbar buttons */
-    transition: background-color 0.3s, box-shadow 0.3s; /* Add smooth transitions */
+    margin-right: 10px;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .nav-button:hover {
-    background-color: #808080; /* Grey background on hover */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow on hover */
+    background-color: #808080;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 h2 {

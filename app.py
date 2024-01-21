@@ -298,15 +298,24 @@ def m_labour():
         
     return render_template('m_labour.html', msg=msg, Site=sitenum)
 
-@app.route('/view_table/<table_name>')
+@app.route('/view_table/<table_name>', methods=['GET', 'POST'])
 def view_table(table_name):
     msg = ''
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(f'SELECT * FROM vitproject.{table_name}')
         data = cursor.fetchall()
+
+        if request.method == 'POST':
+            if 'delete-record' in request.form and 't-id-input' in request.form:
+                t_id = request.form['t-id-input']
+                delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
+                cursor.execute(delete_query, (t_id,))
+                mysql.connection.commit()
+                msg = 'Record deleted!'
+
         if data:
-            return render_template('view_table.html', table_name=table_name, data=data)
+            return render_template('view_table.html', table_name=table_name, data=data, msg=msg)
         else:
             msg = f'No data found in the {table_name} table.'
     except Exception as e:
