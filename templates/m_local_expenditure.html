@@ -32,6 +32,10 @@
         <form method="POST" action="{{ url_for('m_local_expenditure') }}">
 
             <table>
+                <tr>
+                    <td><label for="tid">T_ID</label></td>
+                    <td><input type="text" id="tid" name="tid" placeholder="Used for updation only"></td>
+                </tr>
                 <!-- Date Selection Input -->
                 <tr>
                     <td><label for="exp-date">Date</label></td>
@@ -49,6 +53,7 @@
                     <td><label for="amount-input">Amount</label></td>
                     <td><input type="text" id="amount-input" name="amount-input" required></td>
                 </tr>
+                <input type="hidden" id="HiddenField" name="HiddenField" value="1">
             
                 <div class="msg">{{ msg }}</div>
             </table>
@@ -56,12 +61,19 @@
             <!-- Action Buttons -->
             <div class="action-buttons">
                 <button class="button" type="submit">Submit</button>
-                <button class="button" type="button">Update</button>
+                <button class="button" type="submit" onclick="update()">Update</button>
                 <button class="button" type="button" onclick="location.href='/view_table/expenditure'">View</button>
                 <button class="button" type="reset">Reset</button>
                 <button class="button" onclick="location.href='/home'">Log Out</button>
             </div>
         </form>
     </div>
+
+    <script>
+        function update() {
+            var hiddenField = document.getElementById("HiddenField");
+            hiddenField.value = "2";
+        }
+    </script>
 </body>
 </html>
