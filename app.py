@@ -71,25 +71,31 @@ def d_material_purchase():
         quantity = request.form['quantity-input']
         price = request.form['price-input']
         choice = request.form['HiddenField']
+        tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM purchase WHERE DOB = %s AND Material=%s AND Site=%s", (date, material, sitenum))
+        cursor.execute("SELECT * FROM purchase WHERE T_ID=%s", (tid,))
         record = cursor.fetchone()
         if choice=='1':
+            cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+            mysql.connection.commit()
             insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
             data = (sitenum,date,material,quantity,price)
             cursor.execute(insert_query, data)
             mysql.connection.commit()
-            msg = 'Insertion Succesful'
+            msg = 'Insertion Succesful!'
             return render_template('d_material_purchase.html',msg=msg)
         else:
-            if record:
-                    update_query = "UPDATE vitproject.purchase SET Quantity=%s AND Price=%s WHERE Site=%s AND DOB=%s AND Material=%s"
-                    data = (quantity,price,sitenum, date, material)
-                    cursor.execute(update_query, data)
-                    mysql.connection.commit()
-                    msg = 'Updation Successful'
+            if tid is not None and tid != "":
+                if record:
+                        update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s WHERE T_ID=%s"
+                        data = (quantity,price,sitenum, date, material,tid)
+                        cursor.execute(update_query, data)
+                        mysql.connection.commit()
+                        msg = 'Updation Successful!'
+                else:
+                    msg = 'Record not found!'
             else:
-                msg = 'Record doesnt exist in Site {}'.format(sitenum)
+                msg = 'Enter T_ID for Updation!'
         
     return render_template('d_material_purchase.html',msg=msg)
 
@@ -102,26 +108,32 @@ def m_material_purchase():
         quantity = request.form['quantity-input']
         price = request.form['price-input']
         choice = request.form['HiddenField']
+        tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.purchase WHERE DOB = %s AND Material=%s AND Site=%s', (date, material, sitenum))
+        cursor.execute('SELECT * FROM vitproject.purchase WHERE T_ID=%s AND Site=%s', (tid,sitenum))
         record = cursor.fetchone()
         if choice=='1':
+                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                mysql.connection.commit()
                 insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
                 data = (sitenum,date,material,quantity,price)
                 cursor.execute(insert_query, data)
                 mysql.connection.commit()
-                msg = 'Insertion Succesful'
+                msg = 'Insertion Succesful!'
                 return render_template('m_material_purchase.html',msg=msg, Site=sitenum)
            
         else:
-            if record:
-                    update_query = "UPDATE vitproject.purchase SET Quantity=%s AND Price=%s WHERE Site=%s AND DOB=%s AND Material=%s"
-                    data = (quantity,price,sitenum, date, material)
+            if tid is not None and tid != "":
+                if record:
+                    update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s WHERE T_ID=%s"
+                    data = (quantity,price,sitenum, date, material,tid)
                     cursor.execute(update_query, data)
                     mysql.connection.commit()
-                    msg = 'Updation Successful'
+                    msg = 'Updation Successful!'
+                else:
+                    msg = 'Record not found in Site {}!'.format(sitenum)
             else:
-                msg = 'Record doesnt exist in Site {}'.format(sitenum)
+                msg = 'Enter T_ID for Updation!'
         
     return render_template('m_material_purchase.html',msg=msg, Site=sitenum)
 
@@ -136,26 +148,31 @@ def d_local_expenditure():
         activity = request.form['activity-input']
         amount = request.form['amount-input']
         choice = request.form['HiddenField']
+        tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.expenditure WHERE Site=%s AND DOB=%s AND Activity=%s', (sitenum,date,activity))
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID', (tid,))
         record = cursor.fetchone()
         if choice=='1':
+            cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+            mysql.connection.commit()
             insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
             data = (sitenum,date,activity,amount)
             cursor.execute(insert_query, data)
             mysql.connection.commit()
-            msg = 'Insertion Succesful'
+            msg = 'Insertion Succesful!'
             return render_template('d_local_expenditure.html',msg=msg)
         else:
-            if record:
-                    update_query = "UPDATE vitproject.expenditure SET Amount=%s WHERE Site=%s AND DOB=%s AND Activity=%s"
-                    data = (amount,sitenum, date, activity)
-                    cursor.execute(update_query, data)
-                    mysql.connection.commit()
-                    msg = 'Updation Successful'
-                
+            if tid is not None and tid != "":
+                if record:
+                        update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s WHERE T_ID=%s"
+                        data = (amount,sitenum, date, activity,tid)
+                        cursor.execute(update_query, data)
+                        mysql.connection.commit()
+                        msg = 'Updation Successful!'
+                else:
+                    msg='Record not found!'
             else:
-                msg='Record not found in Site {}'.format(sitenum)
+                msg = 'Enter T_ID for Updation!'
     
     return render_template('d_local_expenditure.html',msg=msg)
 
@@ -167,27 +184,31 @@ def m_local_expenditure():
         activity = request.form['activity-input']
         amount = request.form['amount-input']
         choice = request.form['HiddenField']
+        tid=request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.expenditure WHERE DOB = %s AND Activity=%s AND Site=%s', (date, activity, sitenum))
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID AND Site=%s', (tid,sitenum))
         record = cursor.fetchone()
         if choice=='1':
+                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                mysql.connection.commit()
                 insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
                 data = (sitenum,date,activity,amount)
                 cursor.execute(insert_query, data)
                 mysql.connection.commit()
-                msg = 'Insertion Succesful'
+                msg = 'Insertion Succesful!'
                 return render_template('m_local_expenditure.html',msg=msg, Site=sitenum)
-            
         else:
-            if record:
-                    update_query = "UPDATE vitproject.expenditure SET Amount=%s WHERE Site=%s AND DOB=%s AND Activity=%s"
-                    data = (amount,sitenum, date, activity)
-                    cursor.execute(update_query, data)
-                    mysql.connection.commit()
-                    msg = 'Updation Successful'
-                
+            if tid is not None and tid != "":
+                if record:
+                        update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s WHERE T_ID=%s"
+                        data = (amount,sitenum, date, activity,tid)
+                        cursor.execute(update_query, data)
+                        mysql.connection.commit()
+                        msg = 'Updation Successful!'
+                else:
+                    msg='Record not found in Site {}!'.format(sitenum)
             else:
-                msg='Record not found in Site {}'.format(sitenum)
+                msg = 'Enter T_ID for Updation!'
     
     return render_template('m_local_expenditure.html',msg=msg, Site=sitenum)
 
@@ -201,29 +222,36 @@ def d_staff_salary():
         empid = request.form['empid-input']
         salary = request.form['salary-input']
         choice = request.form['HiddenField']
-
+        tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM vitproject.salary WHERE EmpID=%s AND Site=%s', (empid, sitenum))
         record = cursor.fetchone()
         if choice=='1':
             if not record:
+                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                mysql.connection.commit()
                 insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
                 data = (sitenum,name,empid,salary)
                 cursor.execute(insert_query, data)
                 mysql.connection.commit()
-                msg = 'Insertion Succesful'
+                msg = 'Insertion Succesful!'
                 return render_template('d_staff_salary.html',msg=msg)
             else:
                 msg = 'Record with Employee ID already exists in Site {}!'.format(sitenum)
         else:
-                if record:
-                        update_query = "UPDATE vitproject.salary SET Name=%s AND Salary=%s WHERE Site=%s AND EmpID=%s"
-                        data = (name, salary,sitenum,empid)
+                if tid is not None and tid != "":
+                    cursor.execute('SELECT * FROM vitproject.login WHERE T_ID=%s', (tid,))
+                    record1 = cursor.fetchone()
+                    if record1:
+                        update_query = "UPDATE vitproject.salary SET Name=%s, Salary=%s, Site=%s, EmpID=%s WHERE T_ID=%s"
+                        data = (name, salary,sitenum,empid,tid)
                         cursor.execute(update_query, data)
                         mysql.connection.commit()
-                        msg = 'Updation Successful'
+                        msg = 'Updation Successful!'
+                    else:
+                        msg = 'Record not found!'
                 else:
-                    msg = 'Record with Employee ID doesnt exist in Site {}!'.format(sitenum)
+                    msg = 'Enter T_ID for Updation!'
         
     return render_template('d_staff_salary.html',msg=msg)
 
@@ -235,28 +263,37 @@ def m_staff_salary():
         empid = request.form['empid-input']
         salary = request.form['salary-input']
         choice = request.form['HiddenField']
+        tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM vitproject.salary WHERE EmpID=%s AND Site=%s', (empid, sitenum))
         record = cursor.fetchone()
         if choice=='1':
             if not record:
+                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                mysql.connection.commit()
                 insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
                 data = (sitenum,name,empid,salary)
                 cursor.execute(insert_query, data)
                 mysql.connection.commit()
-                msg = 'Insertion Succesful'
+                msg = 'Insertion Succesful!'
                 return render_template('m_staff_salary.html',msg=msg, Site=sitenum)
             else:
                 msg = 'Record with Employee ID already exists in Site {}!'.format(sitenum)
         else:
-                if record:
-                        update_query = "UPDATE vitproject.salary SET Name=%s AND Salary=%s WHERE Site=%s AND EmpID=%s"
-                        data = (name, salary,sitenum,empid)
+                if tid is not None and tid != "":
+                    cursor.execute('SELECT * FROM vitproject.login WHERE T_ID=%s AND Site=%s', (tid,sitenum))
+                    record1 = cursor.fetchone()
+                    if record1:
+                        print(name,salary,sitenum,empid)
+                        update_query = "UPDATE vitproject.salary SET Name=%s, Salary=%s, Site=%s, EmpID=%s WHERE T_ID=%s"
+                        data = (name, salary,sitenum,empid,tid)
                         cursor.execute(update_query, data)
                         mysql.connection.commit()
-                        msg = 'Updation Successful'
+                        msg = 'Updation Successful!'
+                    else:
+                        msg = 'Record not found in Site {}!'.format(sitenum)
                 else:
-                    msg = 'Record with Employee ID doesnt exist in Site {}!'.format(sitenum)
+                    msg = 'Enter T_ID for Updation!'
         
     return render_template('m_staff_salary.html',msg=msg, Site=sitenum)
 
@@ -275,24 +312,31 @@ def d_manager_accounts():
         record = cursor.fetchone()
         if choice=='1':
             if not record:
+                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                mysql.connection.commit()
                 insert_query = "insert into vitproject.login (Site, Username, Password) values (%s, %s, %s)"
                 data = (sitenum,username,password)
                 cursor.execute(insert_query, data)
                 mysql.connection.commit()
-                msg = 'Insertion Succesful'
+                msg = 'Insertion Succesful!'
                 return render_template('d_manager_accounts.html',msg=msg)
             else:
                 msg = 'Manager account already exists!'
         else:
-            if record:
-                    update_query = "UPDATE vitproject.login SET Site=%s AND Username=%s AND Password=%s WHERE T_ID=%s"
+            if tid is not None and tid != "":
+                cursor.execute('SELECT * FROM vitproject.login WHERE T_ID=%s', (tid,))
+                record1 = cursor.fetchone()
+                if record1:
+                    update_query = "UPDATE vitproject.login SET Site=%s, Username=%s AND Password=%s WHERE T_ID=%s"
                     data = (sitenum, username, password,tid)
                     cursor.execute(update_query, data)
                     mysql.connection.commit()
-                    msg = 'Updation Successful'
+                    msg = 'Updation Successful!'
+                else:
+                    msg = 'Manager account not found!'
             else:
-                msg = 'Manager account doesnt exist!'
-        
+                msg = 'Enter T_ID for Updation!'
+
     return render_template('d_manager_accounts.html',msg=msg)
 
 @app.route('/d_labour', methods=['GET', 'POST','PUT'])
@@ -317,25 +361,29 @@ def d_labour():
             record = cursor.fetchone()
             if choice=='1':
                 if not record:
+                    cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                    mysql.connection.commit()
                     insert_query = "INSERT INTO vitproject.labour (Site, Name, EmpID, DOB, Gender, Languages, Address, Designation) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                     data = (sitenum, name, empid, joining_date, gender, ",".join(languages), address, designation)
                     cursor.execute(insert_query, data)
                     mysql.connection.commit()
-                    msg = 'Insertion Successful'
+                    msg = 'Insertion Successful!'
                 else:
-                    msg = 'Record with Employee ID already exists! in Site {}'.format(sitenum)
+                    msg = 'Record with Employee ID already exists in Site {}!'.format(sitenum)
             else:
-                if record:
-                    if 'tid' in request.form:
-                        update_query = "UPDATE vitproject.labour SET Name=%s AND DOB=%s AND Gender=%s AND Languages=%s AND Address=%s AND Designation=%s WHERE Site=%s AND EmpID=%s"
-                        data = (name, joining_date, gender, ",".join(languages), address, designation,sitenum, empid)
-                        cursor.execute(update_query, data)
-                        mysql.connection.commit()
-                        msg = 'Updation Successful'
+                    if tid is not None and tid != "":
+                        cursor.execute('SELECT * FROM vitproject.labour WHERE T_ID=%s', (tid,))
+                        record1 = cursor.fetchone()
+                        if record1:
+                            update_query = "UPDATE vitproject.labour SET Name=%s, DOB=%s, Gender=%s, Languages=%s, Address=%s, Designation=%s, Site=%s, EmpID=%s WHERE T_ID=%s"
+                            data = (name, joining_date, gender, ",".join(languages), address, designation,sitenum, empid,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
+                            msg = 'Updation Successful!'
+                        else:
+                             msg = 'Record not found!'
                     else:
                         msg = 'Enter T_ID for Updation!'
-                else:
-                    msg = 'Record with Employee ID doesnt exist in Site {}!'.format(sitenum)
         else:
             msg= 'Select atleast one language!'
 
@@ -354,6 +402,7 @@ def m_labour():
             address = request.form['address-input']
             designation = request.form['designation-input']
             choice = request.form['HiddenField']
+            tid=request.form['tid']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM vitproject.labour WHERE Site=%s AND EmpID=%s', (sitenum,empid))
             record = cursor.fetchone()
@@ -361,54 +410,34 @@ def m_labour():
             if choice=='1':
 
                 if not record:
+                    cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                    mysql.connection.commit()
                     insert_query = "INSERT INTO vitproject.labour (Site, Name, EmpID, DOB, Gender, Languages, Address, Designation) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                     data = (sitenum, name, empid, joining_date, gender, ",".join(languages), address, designation)
                     cursor.execute(insert_query, data)
                     mysql.connection.commit()
-                    msg = 'Insertion Successful'
+                    msg = 'Insertion Successful!'
                 else:
                     msg = 'Record with Employee ID already exists in Site {}!'.format(sitenum)
             else:
-                if record:
-                    if 'tid' in request.form:
-                        update_query = "UPDATE vitproject.labour SET Name=%s AND DOB=%s AND Gender=%s AND Languages=%s AND Address=%s AND Designation=%s WHERE Site=%s AND EmpID=%s"
-                        data = (name, joining_date, gender, ",".join(languages), address, designation,sitenum, empid)
-                        cursor.execute(update_query, data)
-                        mysql.connection.commit()
-                        msg = 'Updation Successful'
+                    if tid is not None and tid != "":
+                        cursor.execute('SELECT * FROM vitproject.labour WHERE T_ID=%s AND Site=%s', (tid,sitenum))
+                        record1 = cursor.fetchone()
+                        if record1:
+                            update_query = "UPDATE vitproject.labour SET Name=%s, DOB=%s, Gender=%s, Languages=%s, Address=%s, Designation=%s, Site=%s, EmpID=%s WHERE T_ID=%s"
+                            data = (name, joining_date, gender, ",".join(languages), address, designation,sitenum, empid,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
+                            msg = 'Updation Successful!'
+                        else:
+                             msg = 'Record not found in Site {}!'.format(sitenum)
                     else:
                         msg = 'Enter T_ID for Updation!'
-                else:
-                    msg = 'Record with Employee ID doesnt exist in Site {}!'.format(sitenum)
+                
         else:
             msg = 'Select atleast one language!'
         
     return render_template('m_labour.html', msg=msg, Site=sitenum)
-
-@app.route('/view_table/<table_name>', methods=['GET', 'POST'])
-def view_table(table_name):
-    msg = ''
-    try:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(f'SELECT * FROM vitproject.{table_name}')
-        data = cursor.fetchall()
-
-        if request.method == 'POST':
-            if 'delete-record' in request.form and 't-id-input' in request.form:
-                t_id = request.form['t-id-input']
-                delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
-                cursor.execute(delete_query, (t_id,))
-                mysql.connection.commit()
-                msg = 'Record deleted!'
-
-        if data:
-            return render_template('view_table.html', table_name=table_name, data=data, msg=msg)
-        else:
-            msg = f'No data found in the {table_name} table.'
-    except Exception as e:
-        msg = f'Error: {str(e)}'
-
-    return render_template('view_table.html', table_name=table_name, msg=msg)
 
 @app.route('/d_report', methods=['GET', 'POST','PUT'])
 def d_report():
@@ -443,39 +472,28 @@ def d_report():
         if category == "Expenditure":
             result = cursor.fetchone()['SUM(Amount)']
         else:
-            result = cursor.fetchone()['SUM(Amount)']
+            result = cursor.fetchone()['SUM(Price)']
+
+        month_dict = {
+            1: 'January',
+            2: 'February',
+            3: 'March',
+            4: 'April',
+            5: 'May',
+            6: 'June',
+            7: 'July',
+            8: 'August',
+            9: 'September',
+            10: 'October',
+            11: 'November',
+            12: 'December'
+        }
 
         if result is not None: 
-            msg =f"Total {category} amount for Site {sitenum} {month} {year}: {result} Rs"
+            msg =f"Total {category} amount for Site {sitenum} {month_dict[month]} {year}: {result} Rs"
         else:
-            msg = f"No {category} data available for Site {sitenum} {month} {year}"
+            msg = f"No {category} data available for Site {sitenum} {month_dict[month]} {year}"
     return render_template('d_report.html', msg=msg)
-
-@app.route('/m_view_table/<table_name>', methods=['GET', 'POST'])
-def m_view_table(table_name):
-    msg = ''
-    try:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(f'SELECT * FROM vitproject.{table_name} where Site = {sitenum}')
-        data = cursor.fetchall()
-
-        if request.method == 'POST':
-            if 'delete-record' in request.form and 't-id-input' in request.form:
-                t_id = request.form['t-id-input']
-                delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
-                cursor.execute(delete_query, (t_id,))
-                mysql.connection.commit()
-                msg = 'Record deleted!'
-
-        if data:
-            return render_template('m_view_table.html', table_name=table_name, data=data, msg=msg)
-        else:
-            msg = f'No data found in the {table_name} table.'
-    except Exception as e:
-        msg = f'Error: {str(e)}'
-
-    return render_template('m_view_table.html', table_name=table_name, msg=msg)
-
 
 @app.route('/m_report', methods=['GET', 'POST','PUT'])
 def m_report():
@@ -508,13 +526,79 @@ def m_report():
         if category == "Expenditure":
             result = cursor.fetchone()['SUM(Amount)']
         else:
-            result = cursor.fetchone()['SUM(Amount)']
+            result = cursor.fetchone()['SUM(Price)']
+
+        month_dict = {
+            1: 'January',
+            2: 'February',
+            3: 'March',
+            4: 'April',
+            5: 'May',
+            6: 'June',
+            7: 'July',
+            8: 'August',
+            9: 'September',
+            10: 'October',
+            11: 'November',
+            12: 'December'
+        }
 
         if result is not None: 
-            msg =f"Total {category} amount for Site {sitenum} {month} {year}: {result} Rs"
+            msg =f"Total {category} amount for Site {sitenum} {month_dict[month]} {year}: {result} Rs"
         else:
-            msg = f"No {category} data available for Site {sitenum} {month} {year}"
+            msg = f"No {category} data available for Site {sitenum} {month_dict[month]} {year}"
     return render_template('m_report.html', msg=msg, Site=sitenum)
+
+@app.route('/view_table/<table_name>', methods=['GET', 'POST'])
+def view_table(table_name):
+    msg = ''
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(f'SELECT * FROM vitproject.{table_name}')
+        data = cursor.fetchall()
+
+        if request.method == 'POST':
+            if 'delete-record' in request.form and 't-id-input' in request.form:
+                t_id = request.form['t-id-input']
+                delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
+                cursor.execute(delete_query, (t_id,))
+                mysql.connection.commit()
+                msg = 'Record deleted!'
+
+        if data:
+            return render_template('view_table.html', table_name=table_name, data=data, msg=msg)
+        else:
+            msg = f'No data found in the {table_name} table.'
+    except Exception as e:
+        msg = f'Error: {str(e)}'
+
+    return render_template('view_table.html', table_name=table_name, msg=msg)
+
+@app.route('/m_view_table/<table_name>', methods=['GET', 'POST'])
+def m_view_table(table_name):
+    msg = ''
+    try:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(f'SELECT * FROM vitproject.{table_name} where Site = {sitenum}')
+        data = cursor.fetchall()
+
+        if request.method == 'POST':
+            if 'delete-record' in request.form and 't-id-input' in request.form:
+                t_id = request.form['t-id-input']
+                delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
+                cursor.execute(delete_query, (t_id,))
+                mysql.connection.commit()
+                msg = 'Record deleted!'
+
+        if data:
+            return render_template('m_view_table.html', table_name=table_name, data=data, msg=msg)
+        else:
+            msg = f'No data found in the {table_name} table.'
+    except Exception as e:
+        msg = f'Error: {str(e)}'
+
+    return render_template('m_view_table.html', table_name=table_name, msg=msg)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
