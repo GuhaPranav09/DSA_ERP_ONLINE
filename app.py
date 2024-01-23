@@ -475,6 +475,7 @@ def d_report():
             result = cursor.fetchone()['SUM(Price)']
 
         month_dict = {
+            'Overall': 'Overall',
             1: 'January',
             2: 'February',
             3: 'March',
@@ -529,6 +530,7 @@ def m_report():
             result = cursor.fetchone()['SUM(Price)']
 
         month_dict = {
+            'Overall': 'Overall',
             1: 'January',
             2: 'February',
             3: 'March',
