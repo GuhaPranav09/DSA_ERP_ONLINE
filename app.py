@@ -609,13 +609,13 @@ def m_view_table(table_name):
                 msg = 'Record deleted!'
 
         if data:
-            return render_template('view_table.html', table_name=table_name, data=data, msg=msg, prev_page=prev_page)
+            return render_template('m_view_table.html', table_name=table_name, data=data, msg=msg, prev_page=prev_page)
         else:
             msg = f'No data found in the {table_name} table.'
     except Exception as e:
         msg = f'Error: {str(e)}'
 
-    return render_template('view_table.html', table_name=table_name, msg=msg, prev_page=prev_page)
+    return render_template('m_view_table.html', table_name=table_name, msg=msg, prev_page=prev_page)
 
 
 if __name__ == '__main__':
