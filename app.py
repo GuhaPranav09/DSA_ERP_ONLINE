@@ -228,14 +228,19 @@ def d_staff_salary():
         record = cursor.fetchone()
         if choice=='1':
             if not record:
-                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
-                mysql.connection.commit()
-                insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
-                data = (sitenum,name,empid,salary)
-                cursor.execute(insert_query, data)
-                mysql.connection.commit()
-                msg = 'Insertion Succesful!'
-                return render_template('d_staff_salary.html',msg=msg)
+                cursor.execute('SELECT * FROM vitproject.labour WHERE EmpID=%s AND Site=%s', (empid, sitenum))
+                record2 = cursor.fetchone()
+                if record2:
+                    cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                    mysql.connection.commit()
+                    insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
+                    data = (sitenum,name,empid,salary)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+                    msg = 'Insertion Succesful!'
+                    return render_template('d_staff_salary.html',msg=msg)
+                else:
+                    msg = 'Record with Employee ID not found in Site {} labour records!'.format(sitenum)
             else:
                 msg = 'Record with Employee ID already exists in Site {}!'.format(sitenum)
         else:
@@ -269,14 +274,19 @@ def m_staff_salary():
         record = cursor.fetchone()
         if choice=='1':
             if not record:
-                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
-                mysql.connection.commit()
-                insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
-                data = (sitenum,name,empid,salary)
-                cursor.execute(insert_query, data)
-                mysql.connection.commit()
-                msg = 'Insertion Succesful!'
-                return render_template('m_staff_salary.html',msg=msg, Site=sitenum)
+                cursor.execute('SELECT * FROM vitproject.labour WHERE EmpID=%s AND Site=%s', (empid, sitenum))
+                record2 = cursor.fetchone()
+                if record2:
+                    cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                    mysql.connection.commit()
+                    insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
+                    data = (sitenum,name,empid,salary)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+                    msg = 'Insertion Succesful!'
+                    return render_template('m_staff_salary.html',msg=msg, Site=sitenum)
+                else:
+                    msg = 'Record with Employee ID not found in Site {} labour records!'.format(sitenum)
             else:
                 msg = 'Record with Employee ID already exists in Site {}!'.format(sitenum)
         else:
@@ -343,7 +353,8 @@ def d_manager_accounts():
 def d_labour():
     msg=''
     if request.method == 'POST' and 'site-num' in request.form and 'name-input' in request.form and 'empid-input' in request.form and 'joining-date' in request.form and 'gender-input' in request.form and 'address-input' in request.form and 'designation-input' in request.form:
-        if 'languages-input' in request.form:
+        languages = request.form.getlist('languages-input')
+        if len(languages) != 0: 
             global sitenum
             sitenum = request.form['site-num']
             name = request.form['name-input']
@@ -393,7 +404,8 @@ def d_labour():
 def m_labour():
     msg=''
     if request.method == 'POST' and 'name-input' in request.form and 'empid-input' in request.form and 'joining-date' in request.form and 'gender-input' in request.form and 'address-input' in request.form and 'designation-input' in request.form:
-        if 'languages-input' in request.form: 
+        languages = request.form.getlist('languages-input')
+        if len(languages) != 0: 
             name = request.form['name-input']
             empid = request.form['empid-input']
             joining_date = request.form['joining-date']
