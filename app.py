@@ -566,7 +566,7 @@ def m_report():
 @app.route('/view_table/<table_name>', methods=['GET', 'POST'])
 def view_table(table_name):
     msg = ''
-    prev_page = request.args.get('prev_page', '/home')  # Default to '/home' if not provided
+    prev_page = request.args.get('prev_page', '/')  # Default to '/home' if not provided
 
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -594,7 +594,7 @@ def view_table(table_name):
 @app.route('/m_view_table/<table_name>', methods=['GET', 'POST'])
 def m_view_table(table_name):
     msg = ''
-    prev_page = request.args.get('prev_page', '/home')  # Default to '/home' if not provided
+    prev_page = request.args.get('prev_page', '/')  # Default to '/home' if not provided
 
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
