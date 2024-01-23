@@ -14,7 +14,7 @@ app.config['MYSQL_DB'] = 'vitproject'
 
 mysql = MySQL(app)
 
-@app.route('/home')
+@app.route('/')
 def home():
     return render_template('home.html')
 
