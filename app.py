@@ -150,7 +150,7 @@ def d_local_expenditure():
         choice = request.form['HiddenField']
         tid = request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID', (tid,))
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID=%s', (tid,))
         record = cursor.fetchone()
         if choice=='1':
             cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
@@ -186,7 +186,7 @@ def m_local_expenditure():
         choice = request.form['HiddenField']
         tid=request.form['tid']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID AND Site=%s', (tid,sitenum))
+        cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID=%s AND Site=%s', (tid,sitenum))
         record = cursor.fetchone()
         if choice=='1':
                 cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
@@ -488,18 +488,18 @@ def d_report():
 
         month_dict = {
             'Overall': 'Overall',
-            1: 'January',
-            2: 'February',
-            3: 'March',
-            4: 'April',
-            5: 'May',
-            6: 'June',
-            7: 'July',
-            8: 'August',
-            9: 'September',
-            10: 'October',
-            11: 'November',
-            12: 'December'
+            '1': 'January',
+            '2': 'February',
+            '3': 'March',
+            '4': 'April',
+            '5': 'May',
+            '6': 'June',
+            '7': 'July',
+            '8': 'August',
+            '9': 'September',
+            '10': 'October',
+            '11': 'November',
+            '12': 'December'
         }
 
         if result is not None: 
@@ -543,18 +543,18 @@ def m_report():
 
         month_dict = {
             'Overall': 'Overall',
-            1: 'January',
-            2: 'February',
-            3: 'March',
-            4: 'April',
-            5: 'May',
-            6: 'June',
-            7: 'July',
-            8: 'August',
-            9: 'September',
-            10: 'October',
-            11: 'November',
-            12: 'December'
+            '1': 'January',
+            '2': 'February',
+            '3': 'March',
+            '4': 'April',
+            '5': 'May',
+            '6': 'June',
+            '7': 'July',
+            '8': 'August',
+            '9': 'September',
+            '10': 'October',
+            '11': 'November',
+            '12': 'December'
         }
 
         if result is not None: 
