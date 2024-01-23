@@ -552,6 +552,8 @@ def m_report():
 @app.route('/view_table/<table_name>', methods=['GET', 'POST'])
 def view_table(table_name):
     msg = ''
+    prev_page = request.args.get('prev_page', '/home')  # Default to '/home' if not provided
+
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(f'SELECT * FROM vitproject.{table_name}')
@@ -566,17 +568,20 @@ def view_table(table_name):
                 msg = 'Record deleted!'
 
         if data:
-            return render_template('view_table.html', table_name=table_name, data=data, msg=msg)
+            return render_template('view_table.html', table_name=table_name, data=data, msg=msg, prev_page=prev_page)
         else:
             msg = f'No data found in the {table_name} table.'
     except Exception as e:
         msg = f'Error: {str(e)}'
 
-    return render_template('view_table.html', table_name=table_name, msg=msg)
+    return render_template('view_table.html', table_name=table_name, msg=msg, prev_page=prev_page)
+
 
 @app.route('/m_view_table/<table_name>', methods=['GET', 'POST'])
 def m_view_table(table_name):
     msg = ''
+    prev_page = request.args.get('prev_page', '/home')  # Default to '/home' if not provided
+
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(f'SELECT * FROM vitproject.{table_name} where Site = {sitenum}')
@@ -591,13 +596,13 @@ def m_view_table(table_name):
                 msg = 'Record deleted!'
 
         if data:
-            return render_template('m_view_table.html', table_name=table_name, data=data, msg=msg)
+            return render_template('view_table.html', table_name=table_name, data=data, msg=msg, prev_page=prev_page)
         else:
             msg = f'No data found in the {table_name} table.'
     except Exception as e:
         msg = f'Error: {str(e)}'
 
-    return render_template('m_view_table.html', table_name=table_name, msg=msg)
+    return render_template('view_table.html', table_name=table_name, msg=msg, prev_page=prev_page)
 
 
 if __name__ == '__main__':

@@ -39,6 +39,18 @@
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <button class="nav-button" onclick="location.href='#'">Local Expenditure</button>
+        <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
+        <button class="nav-button" onclick="location.href='/d_report'">Report</button>
+        <button class="nav-button" onclick="location.href='/d_manager_accounts'">Managers</button>
+        <button class="nav-button" onclick="location.href='/d_labour'">Labour</button>
+        <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <br>
     <div class="left-container">
         <h1>{{ table_name | title }} Table</h1>
         {% if msg %}
@@ -66,7 +78,7 @@
             <label for="t-id-input">Enter T_ID:</label>
             <input type="text" id="t-id-input" name="t-id-input" placeholder="Type T_ID here" required>
             <button type="submit" name="delete-record" class="delete-button">Delete Record</button>
-            <br><button class="button" onclick="history.back()" style="margin-top: 5px;">Back</button>
+            <br><button class="button" onclick="location.href='{{ prev_page }}'" style="margin-top: 5px;">Log out</button>
         </form>
     </div>
     
@@ -75,7 +87,7 @@
         setTimeout(function() {
             var messageElement = document.getElementById("message");
             if (messageElement && messageElement.innerText.trim() === "Record deleted!") {
-                location.reload();
+                window.location.href = window.location.href + '?refresh=true';
             }
         }, 3000);
     </script>
