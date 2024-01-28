@@ -453,6 +453,7 @@ def m_labour():
 @app.route('/d_report', methods=['GET', 'POST','PUT'])
 def d_report():
     msg=''
+    data = None
     if request.method=='POST' and 'site-num' in request.form and 'year' in request.form and 'month' in request.form:
         global sitenum
         sitenum=request.form['site-num']
@@ -479,6 +480,7 @@ def d_report():
 
         query = f"SELECT SUM({column_name}) FROM {table_name} WHERE {year_condition} {month_condition} AND Site = {sitenum}"
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        #cursor.execute('SELECT SUM(%s) FROM %s WHERE %s %s AND Site = %s', (column_name, table_name, year_condition, month_condition, sitenum))
         cursor.execute(query)
         if category == "Expenditure":
             result = cursor.fetchone()['SUM(Amount)']
@@ -505,11 +507,16 @@ def d_report():
             msg =f"Total {category} amount for Site {sitenum} {month_dict[month]} {year}: {result} Rs"
         else:
             msg = f"No {category} data available for Site {sitenum} {month_dict[month]} {year}"
-    return render_template('d_report.html', msg=msg)
+        
+        cursor.execute(f'SELECT * FROM {table_name} WHERE {year_condition} {month_condition} AND Site = {sitenum}')
+        data = cursor.fetchall()
+    return render_template('d_report.html', msg=msg, data=data)
 
 @app.route('/m_report', methods=['GET', 'POST','PUT'])
 def m_report():
     msg=''
+    data=None
+    global sitenum
     if request.method=='POST' and 'year' in request.form and 'month' in request.form:
         category=request.form['category']
         year=request.form['year']
@@ -560,7 +567,10 @@ def m_report():
             msg =f"Total {category} amount for Site {sitenum} {month_dict[month]} {year}: {result} Rs"
         else:
             msg = f"No {category} data available for Site {sitenum} {month_dict[month]} {year}"
-    return render_template('m_report.html', msg=msg, Site=sitenum)
+
+        cursor.execute(f'SELECT * FROM {table_name} WHERE {year_condition} {month_condition} AND Site = {sitenum}')
+        data = cursor.fetchall()
+    return render_template('m_report.html', msg=msg, Site=sitenum, data=data)
 
 @app.route('/view_table/<table_name>', methods=['GET', 'POST'])
 def view_table(table_name):
