@@ -21,14 +21,15 @@
 
     <!-- Main Content -->
     <div class="container" style="padding-top: 200px;">
-        <!-- Main Heading -->
-        <h1 class="Company_Name">ALU Structures</h1>
-        
-        <!-- Subheading -->
-        <h2 class="Page_Name">Labour Details</h2>
 
         <!-- Company Logo -->
         <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
+
+        <!-- Subheading -->
+        <h2 class="Page_Name">Staff Salary</h2>
+        
+        <!-- Subheading -->
+        <h2 class="Page_Name">Labour Details</h2>
 
         <!-- Form for Material Purchase -->
         <form method="POST" action="{{ url_for('d_labour') }}" id="Form">
