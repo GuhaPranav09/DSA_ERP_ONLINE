@@ -93,7 +93,7 @@ def d_material_purchase():
                         mysql.connection.commit()
                         msg = 'Updation Successful!'
                 else:
-                    msg = 'Record not found!'
+                    msg = 'Record not found!' 
             else:
                 msg = 'Enter T_ID for Updation!'
         
