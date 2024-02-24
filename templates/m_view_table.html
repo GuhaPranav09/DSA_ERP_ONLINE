@@ -93,7 +93,7 @@
 
         document.getElementById("download-btn").addEventListener("click", function() {
         // Create a new Excel file
-        const jsonString = `{{ data | tojson | replace("'", "\\'") | replace('"', '&quot;') | safe }}`;
+        const jsonString = {{ data | tojson | replace("'", "\\'") | replace('"', '&quot;') | safe }};
         const data1 = JSON.parse(jsonString);
         const csvContent = "data:text/csv;charset=utf-8," + data1.map(row => Object.values(row).join(",")).join("\n");
 
@@ -104,8 +104,7 @@
         link.setAttribute("download", "data.csv");
         document.body.appendChild(link);
         link.click();
-    });
-
+        });
     </script>
 </body>
 </html>
