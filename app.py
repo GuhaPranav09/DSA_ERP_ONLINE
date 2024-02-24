@@ -620,8 +620,7 @@ def m_view_table(table_name):
                 msg = 'Record deleted!'
 
         if data:
-            json_data = json.dumps(data).replace("'", "\\'").replace('"', '&quot;')
-            return render_template('m_view_table.html', table_name=table_name, data=data, msg=msg, prev_page=prev_page,json_data =json_data)
+            return render_template('m_view_table.html', table_name=table_name, data=data, msg=msg, prev_page=prev_page)
         else:
             msg = f'No data found in the {table_name} table.'
     except Exception as e:
