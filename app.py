@@ -90,7 +90,7 @@ def d_material_purchase():
                     file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
 
                     # Construct the new filename
-                    new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+                    new_filename = f'Purchase_{file_count}{os.path.splitext(filename)[1]}'
 
                     # Construct the full file path
                     file_path = os.path.join(purchase_dir, new_filename)
@@ -124,7 +124,7 @@ def d_material_purchase():
                             file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
 
                             # Construct the new filename
-                            new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+                            new_filename = f'Purchase_{file_count}{os.path.splitext(filename)[1]}'
 
                             # Construct the full file path
                             file_path = os.path.join(purchase_dir, new_filename)
@@ -174,7 +174,7 @@ def m_material_purchase():
                     file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
 
                     # Construct the new filename
-                    new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+                    new_filename = f'Purchase_{file_count}{os.path.splitext(filename)[1]}'
 
                     # Construct the full file path
                     file_path = os.path.join(purchase_dir, new_filename)
@@ -208,7 +208,7 @@ def m_material_purchase():
                             file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
 
                             # Construct the new filename
-                            new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+                            new_filename = f'Purchase_{file_count}{os.path.splitext(filename)[1]}'
 
                             # Construct the full file path
                             file_path = os.path.join(purchase_dir, new_filename)
@@ -260,7 +260,7 @@ def d_local_expenditure():
                     file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
 
                     # Construct the new filename
-                    new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+                    new_filename = f'Expenditure_{file_count}{os.path.splitext(filename)[1]}'
 
                     # Construct the full file path
                     file_path = os.path.join(expenditure_dir, new_filename)
@@ -294,7 +294,7 @@ def d_local_expenditure():
                             file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
 
                             # Construct the new filename
-                            new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+                            new_filename = f'Expenditure_{file_count}{os.path.splitext(filename)[1]}'
 
                             # Construct the full file path
                             file_path = os.path.join(expenditure_dir, new_filename)
@@ -343,7 +343,7 @@ def m_local_expenditure():
                     file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
 
                     # Construct the new filename
-                    new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+                    new_filename = f'Expenditure_{file_count}{os.path.splitext(filename)[1]}'
 
                     # Construct the full file path
                     file_path = os.path.join(expenditure_dir, new_filename)
@@ -377,7 +377,7 @@ def m_local_expenditure():
                             file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
 
                             # Construct the new filename
-                            new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+                            new_filename = f'Expenditure_{file_count}{os.path.splitext(filename)[1]}'
 
                             # Construct the full file path
                             file_path = os.path.join(expenditure_dir, new_filename)
