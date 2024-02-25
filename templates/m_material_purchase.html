@@ -28,7 +28,7 @@
 
 
         <!-- Form for Material Purchase -->
-        <form method="POST" action="{{ url_for('m_material_purchase') }}">
+        <form method="POST" action="{{ url_for('m_material_purchase') }}" enctype="multipart/form-data">
             <table>
                 <tr>
                     <td><label for="tid">T_ID</label></td>
@@ -57,6 +57,13 @@
                     <td><label for="price-input">Price</label></td>
                     <td><input type="text" id="price-input" name="price-input" required></td>
                 </tr>
+
+                <!-- Bill Image Upload Input -->
+                <tr>
+                    <td><label for="bill-image">Bill Image</label></td>
+                    <td><input type="file" id="bill-image" name="bill-image" accept="image/*"></td>
+                </tr>
+                
             </table>
             <input type="hidden" id="HiddenField" name="HiddenField" value="1">
 

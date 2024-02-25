@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, session
 from flask_mysqldb import MySQL
+from werkzeug.utils import secure_filename
 import MySQLdb.cursors
-import json
+import os
 
 app = Flask(__name__)
 
@@ -76,24 +77,71 @@ def d_material_purchase():
         cursor.execute("SELECT * FROM purchase WHERE T_ID=%s", (tid,))
         record = cursor.fetchone()
         if choice=='1':
-            cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+            cursor.execute("ALTER TABLE vitproject.purchase AUTO_INCREMENT = 1")
             mysql.connection.commit()
-            insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
-            data = (sitenum,date,material,quantity,price)
-            cursor.execute(insert_query, data)
-            mysql.connection.commit()
+            if 'bill-image' in request.files:
+                bill_image = request.files['bill-image']
+                if bill_image.filename != '':
+                    filename = secure_filename(bill_image.filename)
+                    # Directory where files are saved
+                    purchase_dir = os.path.join(os.getcwd(), 'uploads', 'purchase')
+
+                    # Get the count of files in the 'purchase' folder
+                    file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
+
+                    # Construct the new filename
+                    new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                    # Construct the full file path
+                    file_path = os.path.join(purchase_dir, new_filename)
+
+                    bill_image.save(file_path)
+                    insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price,Bill) values (%s, %s, %s, %s, %s, %s)"
+                    data = (sitenum,date,material,quantity,price, file_path)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+                else:
+                    insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
+                    data = (sitenum,date,material,quantity,price)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
             msg = 'Insertion Succesful!'
             return render_template('d_material_purchase.html',msg=msg)
         else:
             if tid is not None and tid != "":
                 if record:
-                        update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s WHERE T_ID=%s"
-                        data = (quantity,price,sitenum, date, material,tid)
-                        cursor.execute(update_query, data)
-                        mysql.connection.commit()
-                        msg = 'Updation Successful!'
+                    if 'bill-image' in request.files:
+                        bill_image = request.files['bill-image']
+                        if bill_image.filename != '':
+                            old_bill=record['Bill']
+                            if old_bill and os.path.exists(old_bill):
+                                os.remove(old_bill)
+                            filename = secure_filename(bill_image.filename)
+                            # Directory where files are saved
+                            purchase_dir = os.path.join(os.getcwd(), 'uploads', 'purchase')
+
+                            # Get the count of files in the 'purchase' folder
+                            file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
+
+                            # Construct the new filename
+                            new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                            # Construct the full file path
+                            file_path = os.path.join(purchase_dir, new_filename)
+
+                            bill_image.save(file_path)
+                            update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s, Bill=%s WHERE T_ID=%s"
+                            data = (quantity,price,sitenum, date, material,file_path,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
+                        else:
+                            update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s WHERE T_ID=%s"
+                            data = (quantity,price,sitenum, date, material,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
+                    msg = 'Updation Successful!'
                 else:
-                    msg = 'Record not found!' 
+                    msg = 'Record not found in Site {}!'.format(sitenum)
             else:
                 msg = 'Enter T_ID for Updation!'
         
@@ -113,22 +161,68 @@ def m_material_purchase():
         cursor.execute('SELECT * FROM vitproject.purchase WHERE T_ID=%s AND Site=%s', (tid,sitenum))
         record = cursor.fetchone()
         if choice=='1':
-                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
-                mysql.connection.commit()
-                insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
-                data = (sitenum,date,material,quantity,price)
-                cursor.execute(insert_query, data)
-                mysql.connection.commit()
-                msg = 'Insertion Succesful!'
-                return render_template('m_material_purchase.html',msg=msg, Site=sitenum)
-           
+            cursor.execute("ALTER TABLE vitproject.purchase AUTO_INCREMENT = 1")
+            mysql.connection.commit()
+            if 'bill-image' in request.files:
+                bill_image = request.files['bill-image']
+                if bill_image.filename != '':
+                    filename = secure_filename(bill_image.filename)
+                    # Directory where files are saved
+                    purchase_dir = os.path.join(os.getcwd(), 'uploads', 'purchase')
+
+                    # Get the count of files in the 'purchase' folder
+                    file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
+
+                    # Construct the new filename
+                    new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                    # Construct the full file path
+                    file_path = os.path.join(purchase_dir, new_filename)
+
+                    bill_image.save(file_path)
+                    insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price,Bill) values (%s, %s, %s, %s, %s, %s)"
+                    data = (sitenum,date,material,quantity,price, file_path)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+                else:
+                    insert_query = "insert into vitproject.purchase (Site, DOB, Material, Quantity, Price) values (%s, %s, %s, %s, %s)"
+                    data = (sitenum,date,material,quantity,price)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+            msg = 'Insertion Succesful!'
+            return render_template('m_material_purchase.html',msg=msg, Site=sitenum)
         else:
             if tid is not None and tid != "":
                 if record:
-                    update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s WHERE T_ID=%s"
-                    data = (quantity,price,sitenum, date, material,tid)
-                    cursor.execute(update_query, data)
-                    mysql.connection.commit()
+                    if 'bill-image' in request.files:
+                        bill_image = request.files['bill-image']
+                        if bill_image.filename != '':
+                            old_bill=record['Bill']
+                            if old_bill and os.path.exists(old_bill):
+                                os.remove(old_bill)
+                            filename = secure_filename(bill_image.filename)
+                            # Directory where files are saved
+                            purchase_dir = os.path.join(os.getcwd(), 'uploads', 'purchase')
+
+                            # Get the count of files in the 'purchase' folder
+                            file_count = len([name for name in os.listdir(purchase_dir) if os.path.isfile(os.path.join(purchase_dir, name))])
+
+                            # Construct the new filename
+                            new_filename = f'Purchase_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                            # Construct the full file path
+                            file_path = os.path.join(purchase_dir, new_filename)
+
+                            bill_image.save(file_path)
+                            update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s, Bill=%s WHERE T_ID=%s"
+                            data = (quantity,price,sitenum, date, material,file_path,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
+                        else:
+                            update_query = "UPDATE vitproject.purchase SET Quantity=%s, Price=%s, Site=%s, DOB=%s, Material=%s WHERE T_ID=%s"
+                            data = (quantity,price,sitenum, date, material,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
                     msg = 'Updation Successful!'
                 else:
                     msg = 'Record not found in Site {}!'.format(sitenum)
@@ -153,24 +247,71 @@ def d_local_expenditure():
         cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID=%s', (tid,))
         record = cursor.fetchone()
         if choice=='1':
-            cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+            cursor.execute("ALTER TABLE vitproject.expenditure AUTO_INCREMENT = 1")
             mysql.connection.commit()
-            insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
-            data = (sitenum,date,activity,amount)
-            cursor.execute(insert_query, data)
-            mysql.connection.commit()
+            if 'bill-image' in request.files:
+                bill_image = request.files['bill-image']
+                if bill_image.filename != '':
+                    filename = secure_filename(bill_image.filename)
+                    # Directory where files are saved
+                    expenditure_dir = os.path.join(os.getcwd(), 'uploads', 'expenditure')
+
+                    # Get the count of files in the 'expenditure' folder
+                    file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
+
+                    # Construct the new filename
+                    new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                    # Construct the full file path
+                    file_path = os.path.join(expenditure_dir, new_filename)
+
+                    bill_image.save(file_path)
+                    insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount, Bill) values (%s, %s, %s, %s, %s)"
+                    data = (sitenum,date,activity,amount, file_path)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+                else:
+                    insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
+                    data = (sitenum,date,activity,amount)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
             msg = 'Insertion Succesful!'
             return render_template('d_local_expenditure.html',msg=msg)
         else:
             if tid is not None and tid != "":
                 if record:
-                        update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s WHERE T_ID=%s"
-                        data = (amount,sitenum, date, activity,tid)
-                        cursor.execute(update_query, data)
-                        mysql.connection.commit()
+                    if 'bill-image' in request.files:
+                        bill_image = request.files['bill-image']
+                        if bill_image.filename != '':
+                            old_bill=record['Bill']
+                            if old_bill and os.path.exists(old_bill):
+                                os.remove(old_bill)
+                            filename = secure_filename(bill_image.filename)
+                            # Directory where files are saved
+                            expenditure_dir = os.path.join(os.getcwd(), 'uploads', 'expenditure')
+
+                            # Get the count of files in the 'expenditure' folder
+                            file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
+
+                            # Construct the new filename
+                            new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                            # Construct the full file path
+                            file_path = os.path.join(expenditure_dir, new_filename)
+
+                            bill_image.save(file_path)
+                            update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s, Bill=%s WHERE T_ID=%s"
+                            data = (amount,sitenum, date, activity,file_path,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
+                        else:
+                            update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s WHERE T_ID=%s"
+                            data = (amount,sitenum, date, activity,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
                         msg = 'Updation Successful!'
                 else:
-                    msg='Record not found!'
+                    msg='Record not found in Site {}!'.format(sitenum)
             else:
                 msg = 'Enter T_ID for Updation!'
     
@@ -189,21 +330,68 @@ def m_local_expenditure():
         cursor.execute('SELECT * FROM vitproject.expenditure WHERE T_ID=%s AND Site=%s', (tid,sitenum))
         record = cursor.fetchone()
         if choice=='1':
-                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
-                mysql.connection.commit()
-                insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
-                data = (sitenum,date,activity,amount)
-                cursor.execute(insert_query, data)
-                mysql.connection.commit()
-                msg = 'Insertion Succesful!'
-                return render_template('m_local_expenditure.html',msg=msg, Site=sitenum)
+            cursor.execute("ALTER TABLE vitproject.expenditure AUTO_INCREMENT = 1")
+            mysql.connection.commit()
+            if 'bill-image' in request.files:
+                bill_image = request.files['bill-image']
+                if bill_image.filename != '':
+                    filename = secure_filename(bill_image.filename)
+                    # Directory where files are saved
+                    expenditure_dir = os.path.join(os.getcwd(), 'uploads', 'expenditure')
+
+                    # Get the count of files in the 'expenditure' folder
+                    file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
+
+                    # Construct the new filename
+                    new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                    # Construct the full file path
+                    file_path = os.path.join(expenditure_dir, new_filename)
+
+                    bill_image.save(file_path)
+                    insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount, Bill) values (%s, %s, %s, %s, %s)"
+                    data = (sitenum,date,activity,amount, file_path)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+                else:
+                    insert_query = "insert into vitproject.expenditure (Site, DOB, Activity, Amount) values (%s, %s, %s, %s)"
+                    data = (sitenum,date,activity,amount)
+                    cursor.execute(insert_query, data)
+                    mysql.connection.commit()
+            msg = 'Insertion Succesful!'
+            return render_template('m_local_expenditure.html',msg=msg, Site=sitenum)
         else:
             if tid is not None and tid != "":
                 if record:
-                        update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s WHERE T_ID=%s"
-                        data = (amount,sitenum, date, activity,tid)
-                        cursor.execute(update_query, data)
-                        mysql.connection.commit()
+                    if 'bill-image' in request.files:
+                        bill_image = request.files['bill-image']
+                        if bill_image.filename != '':
+                            old_bill=record['Bill']
+                            if old_bill and os.path.exists(old_bill):
+                                os.remove(old_bill)
+                            filename = secure_filename(bill_image.filename)
+                            # Directory where files are saved
+                            expenditure_dir = os.path.join(os.getcwd(), 'uploads', 'expenditure')
+
+                            # Get the count of files in the 'expenditure' folder
+                            file_count = len([name for name in os.listdir(expenditure_dir) if os.path.isfile(os.path.join(expenditure_dir, name))])
+
+                            # Construct the new filename
+                            new_filename = f'Expenditure_{file_count + 1}{os.path.splitext(filename)[1]}'
+
+                            # Construct the full file path
+                            file_path = os.path.join(expenditure_dir, new_filename)
+                            
+                            bill_image.save(file_path)
+                            update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s, Bill=%s WHERE T_ID=%s"
+                            data = (amount,sitenum, date, activity,file_path, tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
+                        else:
+                            update_query = "UPDATE vitproject.expenditure SET Amount=%s, Site=%s, DOB=%s, Activity=%s WHERE T_ID=%s"
+                            data = (amount,sitenum, date, activity,tid)
+                            cursor.execute(update_query, data)
+                            mysql.connection.commit()
                         msg = 'Updation Successful!'
                 else:
                     msg='Record not found in Site {}!'.format(sitenum)
@@ -231,7 +419,7 @@ def d_staff_salary():
                 cursor.execute('SELECT * FROM vitproject.labour WHERE EmpID=%s AND Site=%s', (empid, sitenum))
                 record2 = cursor.fetchone()
                 if record2:
-                    cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                    cursor.execute("ALTER TABLE vitproject.salary AUTO_INCREMENT = 1")
                     mysql.connection.commit()
                     insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
                     data = (sitenum,name,empid,salary)
@@ -277,7 +465,7 @@ def m_staff_salary():
                 cursor.execute('SELECT * FROM vitproject.labour WHERE EmpID=%s AND Site=%s', (empid, sitenum))
                 record2 = cursor.fetchone()
                 if record2:
-                    cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                    cursor.execute("ALTER TABLE vitproject.salary AUTO_INCREMENT = 1")
                     mysql.connection.commit()
                     insert_query = "insert into vitproject.salary (Site, Name, EmpID, Salary) values (%s, %s, %s, %s)"
                     data = (sitenum,name,empid,salary)
@@ -322,7 +510,7 @@ def d_manager_accounts():
         record = cursor.fetchone()
         if choice=='1':
             if not record:
-                cursor.execute("ALTER TABLE vitproject.labour AUTO_INCREMENT = 1")
+                cursor.execute("ALTER TABLE vitproject.login AUTO_INCREMENT = 1")
                 mysql.connection.commit()
                 insert_query = "insert into vitproject.login (Site, Username, Password) values (%s, %s, %s)"
                 data = (sitenum,username,password)
@@ -586,6 +774,12 @@ def view_table(table_name):
         if request.method == 'POST':
             if 'delete-record' in request.form and 't-id-input' in request.form:
                 t_id = request.form['t-id-input']
+                cursor.execute(f'SELECT * FROM vitproject.{table_name} WHERE T_ID=%s', (t_id,))
+                record = cursor.fetchone()
+                if record and ('Bill' in record):
+                    old_bill=record['Bill']
+                    if old_bill and os.path.exists(old_bill):
+                        os.remove(record['Bill'])
                 delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
                 cursor.execute(delete_query, (t_id,))
                 mysql.connection.commit()
@@ -614,6 +808,12 @@ def m_view_table(table_name):
         if request.method == 'POST':
             if 'delete-record' in request.form and 't-id-input' in request.form:
                 t_id = request.form['t-id-input']
+                cursor.execute('SELECT * FROM vitproject.%s WHERE T_ID=%s', (table_name,t_id))
+                record = cursor.fetchone()
+                if record and ('Bill' in record):
+                    old_bill=record['Bill']
+                    if old_bill and os.path.exists(old_bill):
+                        os.remove(record['Bill'])
                 delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
                 cursor.execute(delete_query, (t_id,))
                 mysql.connection.commit()

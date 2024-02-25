@@ -87,7 +87,7 @@
         setTimeout(function() {
             var messageElement = document.getElementById("message");
             if (messageElement && messageElement.innerText.trim() === "Record deleted!") {
-                location.reload();
+                window.location.href = window.location.href + '?refresh=true';
             }
         }, 3000);
 
