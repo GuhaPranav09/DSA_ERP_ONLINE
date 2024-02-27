@@ -66,7 +66,7 @@
                     <tr>
                         {% for key,value in row.items() %}
                             {% if key == 'Bill' and value != 'None' and value %}
-                                <td><a href="{{ value }}" target="_blank">View Bill</a></td>
+                                <td><a href="file:/{{ value }}" target="_blank">View Bill</a></td>
                             {% else %}
                                 <td>{{ value }}</td>
                             {% endif %}
