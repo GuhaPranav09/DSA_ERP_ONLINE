@@ -63,8 +63,12 @@
                 </tr>
                 {% for row in data %}
                     <tr>
-                        {% for value in row.values() %}
-                            <td>{{ value }}</td>
+                        {% for key,value in row.items() %}
+                            {% if key == 'Bill' and value != 'None' and value %}
+                                <td><a href="{{ value }}" target="_blank">View Bill</a></td>
+                            {% else %}
+                                <td>{{ value }}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                 {% endfor %}
