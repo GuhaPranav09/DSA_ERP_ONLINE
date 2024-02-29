@@ -21,33 +21,72 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                defaultDate: new Date(),
-                navLinks: true,
-                editable: true,
-                eventLimit: true,
-                events: [
-                    {% for event in calendar %}
-                    {
-                        title: 'Total Expenditure: ${{ event.total_amount }}',
-                        start: '{{ event.date }}',
-                        color: '#f00'
+            var calendar = $('#calendar');
+    
+            function initializeCalendar() {
+                calendar.fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
                     },
-                    {% endfor %}
-                ]
+                    defaultDate: new Date(),
+                    navLinks: true,
+                    editable: true,
+                    eventLimit: true,
+                    events: function(start, end, timezone, callback) {
+                        var selectedSite = $('#site_select').val();
+                        $.ajax({
+                            url: '/calendar_events/' + selectedSite,
+                            success: function(data) {
+                                var events = [];
+                                $.each(data, function(index, item) {
+                                    var formattedDate = moment(item.date).format('YYYY-MM-DD');
+                                    events.push({
+                                        title: 'Total Expenditure: $' + item.total_amount,
+                                        start: formattedDate,
+                                        color: '#f00'
+                                    });
+                                });
+                                callback(events);
+                            }
+                        });
+                    }
+                });
+            }
+    
+            $('#site_select').change(function() {
+                var selectedSite = $(this).val();
+                $.ajax({
+                    url: '/calendar_events/' + selectedSite,
+                    success: function(data) {
+                        calendar.fullCalendar('destroy');
+                        initializeCalendar();
+                        calendar.fullCalendar('removeEvents');
+                        calendar.fullCalendar('addEventSource', data);
+                    }
+                });
             });
+    
+            initializeCalendar();
         });
-    </script>
+    </script>    
+    
 </head>
 <body>
     <br />
     <h1 align="center"><a href="#">Calendar with Expenditure</a></h1>
     <br />
+    <div>
+        <label for="site_select">Select Site:</label>
+        <select id="site_select">
+            {% for site in sites %}
+                <option value="{{ site.site_number }}">{{ site.site_number }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <br />
     <div id="calendar"></div>
 </body>
 </html>
+
