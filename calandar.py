@@ -15,9 +15,16 @@ conn = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB
 @app.route('/')
 def index():
     cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute("SELECT Dateofspent as date, SUM(Amount) AS total_amount FROM expenditure GROUP BY Dateofspent")
+    cur.execute("SELECT DISTINCT Site as site_number FROM expenditure")
+    sites = cur.fetchall()
+    return render_template('calendar.html', sites=sites)
+
+@app.route('/calendar_events/<site_number>')
+def calendar_events(site_number):
+    cur = conn.cursor(pymysql.cursors.DictCursor)
+    cur.execute("SELECT DOB as date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB", (site_number,))
     calendar = cur.fetchall()
-    return render_template('index.html', calendar=calendar)
+    return jsonify(calendar)
 
 if __name__ == "__main__":
     app.run(debug=True)
