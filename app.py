@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, request, jsonify
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 import MySQLdb.cursors
@@ -777,10 +777,10 @@ def view_table(table_name):
                 t_id = request.form['t-id-input']
                 cursor.execute(f'SELECT * FROM vitproject.{table_name} WHERE T_ID=%s', (t_id,))
                 record = cursor.fetchone()
-                if record and ('Bill' in record):
-                    old_bill=record['Bill']
-                    if old_bill and os.path.exists(old_bill):
-                        os.remove(record['Bill'])
+                #if record and ('Bill' in record):
+                    #old_bill=record['Bill']
+                    #if old_bill and os.path.exists(old_bill):
+                        #os.remove(record['Bill'])
                 delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
                 cursor.execute(delete_query, (t_id,))
                 mysql.connection.commit()
@@ -811,10 +811,10 @@ def m_view_table(table_name):
                 t_id = request.form['t-id-input']
                 cursor.execute('SELECT * FROM vitproject.%s WHERE T_ID=%s', (table_name,t_id))
                 record = cursor.fetchone()
-                if record and ('Bill' in record):
-                    old_bill=record['Bill']
-                    if old_bill and os.path.exists(old_bill):
-                        os.remove(record['Bill'])
+                #if record and ('Bill' in record):
+                    #old_bill=record['Bill']
+                    #if old_bill and os.path.exists(old_bill):
+                        #os.remove(record['Bill'])
                 delete_query = f'DELETE FROM vitproject.{table_name} WHERE T_ID = %s'
                 cursor.execute(delete_query, (t_id,))
                 mysql.connection.commit()
@@ -829,6 +829,19 @@ def m_view_table(table_name):
 
     return render_template('m_view_table.html', table_name=table_name, msg=msg, prev_page=prev_page)
 
+@app.route('calendar')
+def calendar():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT DISTINCT Site as site_number FROM expenditure")
+    sites = cur.fetchall()
+    return render_template('calendar.html', sites=sites)
+
+@app.route('/calendar_events/<site_number>')
+def calendar_events(site_number):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT DOB as date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB", (site_number,))
+    calendar = cur.fetchall()
+    return jsonify(calendar)
 
 if __name__ == '__main__':
     app.run(debug=True)
