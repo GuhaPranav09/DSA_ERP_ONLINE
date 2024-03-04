@@ -22,7 +22,11 @@ def index():
 @app.route('/calendar_events/<site_number>')
 def calendar_events(site_number):
     cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute("SELECT DOB as date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB", (site_number,))
+    cur.execute('''SELECT date, SUM(total_amount) AS total_amount FROM (
+                SELECT DOB AS date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB
+                UNION ALL
+                SELECT DOB AS date, SUM(Price) AS total_amount FROM purchase WHERE Site = %s GROUP BY DOB
+              ) AS combined_data GROUP BY date''', (site_number, site_number))
     calendar = cur.fetchall()
     return jsonify(calendar)
 
