@@ -176,7 +176,7 @@
 
             function updateCharts(selectedYear) {
                 // Fetch data from the server based on the selected year
-                fetch(`/get_chart_data/${selectedYear}`)
+                fetch(`/m_get_chart_data/${selectedYear}`)
                     .then(response => response.json())
                     .then(data => {
                         // Update the datasets for the charts

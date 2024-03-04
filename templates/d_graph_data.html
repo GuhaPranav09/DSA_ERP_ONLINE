@@ -186,7 +186,7 @@
             function updateCharts(selectedYear) {
                 var sitenum = document.getElementById('submit').value
                 // Fetch data from the server based on the selected year
-                fetch(`/get_chart_data/${selectedYear}/${sitenum}`)
+                fetch(`/d_get_chart_data/${selectedYear}/${sitenum}`)
                     .then(response => response.json())
                     .then(data => {
                         // Update the datasets for the charts

@@ -832,8 +832,8 @@ def m_view_table(table_name):
     return render_template('m_view_table.html', table_name=table_name, msg=msg, prev_page=prev_page)
 
 
-@app.route('/get_chart_data/<selectedYear>')
-def get_chart_data(selectedYear):
+@app.route('/d_get_chart_data/<selectedYear>/<sitenum>')
+def d_get_chart_data(selectedYear):
     # Query database to get expenditure and purchase data for the selected year
     # Use the SQL query you provided earlier to retrieve the data
     # Replace the placeholder with the actual SQL query
@@ -849,9 +849,9 @@ def get_chart_data(selectedYear):
              UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
              UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS MONTHS
         LEFT JOIN 
-            expenditure ON MONTHS.month_number = MONTH(expenditure.DOB) AND YEAR(expenditure.DOB) = {selectedYear}
+            expenditure ON MONTHS.month_number = MONTH(expenditure.DOB) AND YEAR(expenditure.DOB) = {selectedYear} AND expenditure.Site = {sitenum}
         LEFT JOIN 
-            purchase ON MONTHS.month_number = MONTH(purchase.DOB) AND YEAR(purchase.DOB) = {selectedYear}
+            purchase ON MONTHS.month_number = MONTH(purchase.DOB) AND YEAR(purchase.DOB) = {selectedYear} AND purchase.Site = {sitenum}
         GROUP BY 
             MONTHS.month_number
         ORDER BY 
@@ -882,6 +882,41 @@ def get_chart_data(selectedYear):
 
     return jsonify(chart_data)
 '''
+@app.route('/m_get_chart_data/<selectedYear>')
+def m_get_chart_data(selectedYear):
+    # Query database to get expenditure and purchase data for the selected year
+    # Use the SQL query you provided earlier to retrieve the data
+    # Replace the placeholder with the actual SQL query
+
+    # Example query (modify according to your database schema):
+    query = f"""
+        SELECT 
+            MONTHS.month_number AS month,
+            COALESCE(SUM(expenditure.Amount), 0) AS total_expenditure,
+            COALESCE(SUM(purchase.Price), 0) AS total_purchase
+        FROM 
+            (SELECT 1 AS month_number
+             UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
+             UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS MONTHS
+        LEFT JOIN 
+            expenditure ON MONTHS.month_number = MONTH(expenditure.DOB) AND YEAR(expenditure.DOB) = {selectedYear} AND expenditure.Site = {sitenum}
+        LEFT JOIN 
+            purchase ON MONTHS.month_number = MONTH(purchase.DOB) AND YEAR(purchase.DOB) = {selectedYear} AND purchase.Site = {sitenum}
+        GROUP BY 
+            MONTHS.month_number
+        ORDER BY 
+            month;
+    """
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute(query)
+    chart_data = cursor.fetchall()
+
+    # Process the data into a format suitable for the chart
+    expenditure_data = {entry['month']: entry['total_expenditure'] for entry in chart_data}
+    purchase_data = {entry['month']: entry['total_purchase'] for entry in chart_data}
+
+    return jsonify({'expenditure': expenditure_data, 'purchase': purchase_data})
 
 @app.route('/m_graph_data')
 def m_graph_data():
