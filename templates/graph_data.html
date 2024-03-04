@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Graph Data - ALU Structures</title>
     <style>
@@ -26,15 +27,33 @@
             padding: 20px;
         }
     
-        canvas {
+        .barchart{
             max-width: 100%;
             margin: auto;
             height: 400px; /* Adjusted the height property for better visibility */
+        }
+
+        .piechart{
+            max-width: 75%;
+            margin: auto;
+            height:400px;
         }
     
         select {
             width: 250px;
             padding-bottom: 10px;
+        }
+        .barchart-container {
+            width: 60%; /* Each pie chart container takes 50% of the width */
+            float: left; /* Float the containers to the left to make them appear side by side */
+            box-sizing: border-box; /* Include padding and border in the width */
+            padding: 0 10px; /* Add padding to create space between the pie charts */
+        }
+        .piechart-container {
+            width: 40%; /* Each pie chart container takes 50% of the width */
+            float: left; /* Float the containers to the left to make them appear side by side */
+            box-sizing: border-box; /* Include padding and border in the width */
+            padding: 0 10px; /* Add padding to create space between the pie charts */
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -57,6 +76,7 @@
     <br>
     <br>
     <br>
+   
     <br>
     <br>
     <br>
@@ -85,6 +105,9 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
+
 
     <!-- Company Logo -->
     <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
@@ -96,11 +119,22 @@
     <div class="container">
         <!-- Left Container for Bar Charts -->
         <div class="left-container">
-            <h3>Monthly Expenditure</h3>
-            <canvas id="expenditureChart"></canvas>
-
-            <h3>Monthly Material Purchase</h3>
-            <canvas id="purchaseChart"></canvas>
+            <div class="barchart-container">
+                <h3>Monthly Expenditure</h3>
+                <canvas class ="barchart" id="expenditureChart"></canvas>
+            </div>
+            <div class="piechart-container">
+                <h3>Monthly Expenditure</h3>
+                <canvas class ="piechart" id="expenditurePieChart"></canvas>
+            </div>
+            <div class="barchart-container">
+                <h3>Monthly Material Purchase</h3>
+                <canvas class ="barchart" id="purchaseChart"></canvas>
+            </div>
+            <div class="piechart-container">
+                <h3>Monthly Material Purchase</h3>
+                <canvas class ="piechart" id="purchasePieChart"></canvas>
+            </div>
 
             <!-- Dropdown for Year Selection -->
             <label for="year">Select Year</label>
@@ -134,6 +168,12 @@
             var ctx2 = document.getElementById('purchaseChart').getContext('2d');
             var purchaseChart;
 
+            var ctx3 = document.getElementById('expenditurePieChart').getContext('2d');
+            var expenditurePieChart;
+
+            var ctx4 = document.getElementById('purchasePieChart').getContext('2d');
+            var purchasePieChart;
+
             function updateCharts(selectedYear) {
                 // Fetch data from the server based on the selected year
                 fetch(`/get_chart_data/${selectedYear}`)
@@ -147,9 +187,19 @@
                         expenditureChart.data.labels = Object.keys(data.expenditure);
                         purchaseChart.data.labels = Object.keys(data.purchase);
 
+                         // Update the datasets for the pie charts
+                        expenditurePieChart.data.datasets[0].data = Object.values(data.expenditure);
+                        purchasePieChart.data.datasets[0].data = Object.values(data.purchase);
+
+                        // Update the labels for the pie charts
+                        expenditurePieChart.data.labels = Object.keys(data.expenditure);
+                        purchasePieChart.data.labels = Object.keys(data.purchase);
+
                         // Update the charts
                         expenditureChart.update();
                         purchaseChart.update();
+                        expenditurePieChart.update();
+                        purchasePieChart.update();
                     });
             }
 
@@ -193,6 +243,34 @@
                             beginAtZero: true
                         }
                     }
+                }
+            });
+
+            expenditurePieChart = new Chart(ctx3, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Expenditure',
+                        data: [],
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                }
+            });
+
+            purchasePieChart = new Chart(ctx4, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Purchase',
+                        data: [],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
                 }
             });
 
