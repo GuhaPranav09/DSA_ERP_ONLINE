@@ -901,5 +901,8 @@ def get_chart_data(selectedYear):
 def m_graph_data():
     return render_template('graph_data.html', Site=sitenum)
 
+
+#hi u gay piece of shit
+
 if __name__ == '__main__':
     app.run(debug=True)
