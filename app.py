@@ -885,9 +885,11 @@ def get_chart_data(selectedYear):
 
 @app.route('/m_graph_data')
 def m_graph_data():
-    return render_template('graph_data.html', Site=sitenum)
+    return render_template('m_graph_data.html', Site=sitenum)
 
-
+@app.route('/d_graph_data')
+def d_graph_data():
+    return render_template('d_graph_data.html')
 #hi u gay piece of shit
 
 if __name__ == '__main__':
