@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, session, request, jsonify
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
+from flask.json import jsonify
 import MySQLdb.cursors
 import os
+import json
 
 app = Flask(__name__)
 
@@ -828,6 +830,20 @@ def m_view_table(table_name):
         msg = f'Error: {str(e)}'
 
     return render_template('m_view_table.html', table_name=table_name, msg=msg, prev_page=prev_page)
+
+@app.route('calendar')
+def calendar():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT DISTINCT Site as site_number FROM expenditure")
+    sites = cur.fetchall()
+    return render_template('calendar.html', sites=sites)
+
+@app.route('/calendar_events/<site_number>')
+def calendar_events(site_number):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT DOB as date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB", (site_number,))
+    calendar = cur.fetchall()
+    return jsonify(calendar)
 
 if __name__ == '__main__':
     app.run(debug=True)
