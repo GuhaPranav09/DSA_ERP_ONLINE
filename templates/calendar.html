@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar</title>
+    <title>Calendar with Expenditure</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css">
     <style>
         body {
@@ -22,7 +22,7 @@
     <script>
         $(document).ready(function () {
             var calendar = $('#calendar');
-    
+
             function initializeCalendar() {
                 calendar.fullCalendar({
                     header: {
@@ -42,11 +42,14 @@
                                 var events = [];
                                 $.each(data, function(index, item) {
                                     var formattedDate = moment(item.date).format('YYYY-MM-DD');
+                                    var title = 'Expenditure: $' + item.total_amount_expenditure  + '\nPurchase: $' + item.total_amount_purchase;
                                     events.push({
-                                        title: 'Total Expenditure: $' + item.total_amount,
+                                        title: title,
                                         start: formattedDate,
-                                        color: '#f00'
+                                        allDay: true, // Set allDay property to true
+                                        color: '#f00',
                                     });
+                                    
                                 });
                                 callback(events);
                             }
@@ -54,7 +57,7 @@
                     }
                 });
             }
-    
+
             $('#site_select').change(function() {
                 var selectedSite = $(this).val();
                 $.ajax({
@@ -67,15 +70,14 @@
                     }
                 });
             });
-    
+
             initializeCalendar();
         });
     </script>    
-    
 </head>
 <body>
     <br />
-    <h1 align="center">Calendar with Expenditure</h1>
+    <h1 align="center"><a href="#">Calendar with Expenditure</a></h1>
     <br />
     <div>
         <label for="site_select">Select Site:</label>
@@ -89,4 +91,3 @@
     <div id="calendar"></div>
 </body>
 </html>
-
