@@ -833,11 +833,11 @@ def m_view_table(table_name):
 
 
 @app.route('/d_get_chart_data/<selectedYear>/<sitenum>')
-def d_get_chart_data(selectedYear):
-    # Query database to get expenditure and purchase data for the selected year
+def d_get_chart_data(selectedYear, sitenum):
+    # Query database to get expenditure and purchase data for the selected year and site number
     # Use the SQL query you provided earlier to retrieve the data
     # Replace the placeholder with the actual SQL query
-
+    
     # Example query (modify according to your database schema):
     query = f"""
         SELECT 
@@ -867,8 +867,10 @@ def d_get_chart_data(selectedYear):
     purchase_data = {entry['month']: entry['total_purchase'] for entry in chart_data}
 
     return jsonify({'expenditure': expenditure_data, 'purchase': purchase_data})
-'''
 
+
+
+'''
 @app.route('/get_chart_data/<selectedYear>', methods=['GET'])
 def get_chart_data(selectedYear):
     # Execute your query to fetch chart data based on the selected year

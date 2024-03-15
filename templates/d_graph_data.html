@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>Graph Data - ALU Structures</title>
+    <title>Graph Data Site {{ Site }} - ALU Structures</title>
     <style>
         body {
             display: flex;
@@ -39,10 +39,9 @@
             height:400px;
         }
     
-        input,select {
+        select {
             width: 250px;
-            padding: 10px;
-            margin: 5px;
+            padding-bottom: 10px;
         }
         .barchart-container {
             width: 60%; /* Each pie chart container takes 50% of the width */
@@ -56,19 +55,38 @@
             box-sizing: border-box; /* Include padding and border in the width */
             padding: 0 10px; /* Add padding to create space between the pie charts */
         }
+
+        .input-container {
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        .input-field {
+            width: 250px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        .submit-button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <button class="nav-button" onclick="location.href='/d_local_expenditure'">Local Expenditure</button>
-        <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
-        <button class="nav-button" onclick="location.href='/d_report'">Report</button>
+        <button class="nav-button" onclick="location.href='/m_local_expenditure'">Local Expenditure</button>
+        <button class="nav-button" onclick="location.href='/m_material_purchase'">Material Purchase</button>
+        <button class="nav-button" onclick="location.href='/m_report'">Report</button>
         <button class="nav-button" onclick="location.href='#'">Graph Data</button>
-        <button class="nav-button" onclick="location.href='/d_manager_accounts'">Managers</button>
-        <button class="nav-button" onclick="location.href='/d_labour'">Labour</button>
-        <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
+        <button class="nav-button" onclick="location.href='/m_labour'">Labour</button>
+        <button class="nav-button" onclick="location.href='/m_staff_salary'">Staff Salary</button>
     </nav>
     <br>
     <br>
@@ -109,18 +127,23 @@
     <br>
     <br>
     <br>
+    <br>
 
 
     <!-- Company Logo -->
     <img class="logo" src="{{ url_for('static', filename='company_logo.png') }}" alt="Company Logo">
 
     <!-- Subheading -->
-    <h2 class="Page_Name">Graph Data</h2>
+    <h2 class="Page_Name">Graph Data - Site {{ Site }}</h2>
 
     <!-- Main Content -->
     <div class="container">
         <!-- Left Container for Bar Charts -->
         <div class="left-container">
+            <div class="input-container">
+                <input type="text" class="input-field" id="sitenum" name="sitenum" placeholder="Enter Site Number">
+                <button class="submit-button" onclick="updateCharts()">Submit</button>
+            </div>
             <div class="barchart-container">
                 <h3>Monthly Expenditure</h3>
                 <canvas class ="barchart" id="expenditureChart"></canvas>
@@ -137,35 +160,6 @@
                 <h3>Monthly Material Purchase</h3>
                 <canvas class ="piechart" id="purchasePieChart"></canvas>
             </div>
-
-            <!-- Dropdown for Year Selection -->
-            <label for="year">Select Year</label>
-            <select id="year" name="year" required>
-                <option value="2008">2008</option>
-                <option value="2009">2009</option>
-                <option value="2010">2010</option>
-                <option value="2011">2011</option>
-                <option value="2012">2012</option>
-                <option value="2013">2013</option>
-                <option value="2014">2014</option>
-                <option value="2015">2015</option>
-                <option value="2016">2016</option>
-                <option value="2017">2017</option>
-                <option value="2018">2018</option>
-                <option value="2019">2019</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-            </select>
-            
-            <label for="site-num">Site</label>
-            <input type="text" id="site-num" name="site-num" required>
-            <br>
-            <button class="button" type="button" id="submit" onclick="updateCharts()">Submit</button>
-
-            
         </div>
     </div>
 
@@ -183,10 +177,11 @@
             var ctx4 = document.getElementById('purchasePieChart').getContext('2d');
             var purchasePieChart;
 
-            function updateCharts(selectedYear) {
-                var sitenum = document.getElementById('submit').value
-                // Fetch data from the server based on the selected year
-                fetch(`/d_get_chart_data/${selectedYear}/${sitenum}`)
+            function updateCharts() {
+                var sitenum = document.getElementById('sitenum').value;
+                
+                // Fetch data from the server based on the entered sitenum
+                fetch(`/m_get_chart_data/${sitenum}`)
                     .then(response => response.json())
                     .then(data => {
                         // Update the datasets for the charts
@@ -223,7 +218,7 @@
                         data: [],
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
                         borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
+                        borderWidth: 2
                     }]
                 },
                 options: {
@@ -244,7 +239,7 @@
                         data: [],
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                        borderWidth: 2
                     }]
                 },
                 options: {
@@ -265,7 +260,7 @@
                         data: [],
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
                         borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
+                        borderWidth: 2
                     }]
                 }
             });
@@ -279,16 +274,9 @@
                         data: [],
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                        borderWidth: 2
                     }]
                 }
-            });
-
-            // Event listener for dropdown change
-            var dropdown = document.getElementById('year');
-            dropdown.addEventListener('change', function () {
-                var selectedYear = dropdown.value;
-                updateCharts(selectedYear);
             });
         });
     </script>
