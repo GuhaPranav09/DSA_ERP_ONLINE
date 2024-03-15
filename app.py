@@ -834,10 +834,10 @@ def m_view_table(table_name):
 
 @app.route('/d_get_chart_data/<selectedYear>/<sitenum>')
 def d_get_chart_data(selectedYear, sitenum):
-    # Query database to get expenditure and purchase data for the selected year and site number
+    # Query database to get expenditure and purchase data for the selected year and sitenum
     # Use the SQL query you provided earlier to retrieve the data
     # Replace the placeholder with the actual SQL query
-    
+
     # Example query (modify according to your database schema):
     query = f"""
         SELECT 
@@ -867,6 +867,8 @@ def d_get_chart_data(selectedYear, sitenum):
     purchase_data = {entry['month']: entry['total_purchase'] for entry in chart_data}
 
     return jsonify({'expenditure': expenditure_data, 'purchase': purchase_data})
+
+
 
 
 
@@ -927,7 +929,21 @@ def m_graph_data():
 @app.route('/d_graph_data')
 def d_graph_data():
     return render_template('d_graph_data.html')
-#hi u gay piece of shit
+
+@app.route('/m_calendar')
+def m_calendar():
+    return render_template('m_calendar.html')
+
+@app.route('/m_calendar_events')
+def m_calendar_events():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('''SELECT date, SUM(total_amount) AS total_amount FROM (
+                SELECT DOB AS date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB
+                UNION ALL
+                SELECT DOB AS date, SUM(Price) AS total_amount FROM purchase WHERE Site = %s GROUP BY DOB
+              ) AS combined_data GROUP BY date''', (sitenum, sitenum))
+    calendar = cur.fetchall()
+    return jsonify(m_calendar)
 
 if __name__ == '__main__':
     app.run(debug=True)
