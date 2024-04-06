@@ -65,7 +65,6 @@
         <button class="nav-button" onclick="location.href='/d_local_expenditure'">Local Expenditure</button>
         <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
         <button class="nav-button" onclick="location.href='/d_report'">Report</button>
-        <button class="nav-button" onclick="location.href='#'">Graph Data</button>
         <button class="nav-button" onclick="location.href='/d_manager_accounts'">Managers</button>
         <button class="nav-button" onclick="location.href='/d_labour'">Labour</button>
         <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
@@ -161,7 +160,7 @@
             </select>
             
             <label for="site-num">Site</label>
-            <input type="text" id="site-num" name="site-num" required>
+            <input type="text" id="sitenum" name="sitenum" required>
             <br>
             <button class="button" type="button" id="submit" onclick="updateCharts()">Submit</button>
 
@@ -184,7 +183,7 @@
             var purchasePieChart;
 
             function updateCharts(selectedYear) {
-                var sitenum = document.getElementById('submit').value
+                var sitenum = document.getElementById('sitenum').value
                 // Fetch data from the server based on the selected year
                 fetch(`/d_get_chart_data/${selectedYear}/${sitenum}`)
                     .then(response => response.json())

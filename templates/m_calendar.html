@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar with Expenditure</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,9 +35,8 @@
                     editable: true,
                     eventLimit: true,
                     events: function(start, end, timezone, callback) {
-                        var selectedSite = $('#site_select').val();
                         $.ajax({
-                            url: '/calendar_events/' + selectedSite,
+                            url: '/m_calendar_events/',
                             success: function(data) {
                                 var events = [];
                                 $.each(data, function(index, item) {
@@ -59,18 +57,6 @@
                 });
             }
 
-            $('#site_select').change(function() {
-                var selectedSite = $(this).val();
-                $.ajax({
-                    url: '/calendar_events/' + selectedSite,
-                    success: function(data) {
-                        calendar.fullCalendar('destroy');
-                        initializeCalendar();
-                        calendar.fullCalendar('removeEvents');
-                        calendar.fullCalendar('addEventSource', data);
-                    }
-                });
-            });
 
             initializeCalendar();
         });
@@ -78,59 +64,8 @@
 </head>
 <body>
     <br />
+    <h1 align="center"><a href="#">Calendar with Expenditure</a></h1>
     <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <nav class="navbar">
-        <button class="nav-button" onclick="location.href='/d_local_expenditure'">Local Expenditure</button>
-        <button class="nav-button" onclick="location.href='/d_material_purchase'">Material Purchase</button>
-        <button class="nav-button" onclick="location.href='/d_report'">Report</button>
-        <button class="nav-button" onclick="location.href='/d_labour'">Labour</button>
-        <button class="nav-button" onclick="location.href='/d_staff_salary'">Staff Salary</button>
-    </nav>
-
-    <h1 class="Page_Name">Calendar View</h1>
-
-    <div>
-        <label for="site_select">Select Site:</label>
-        <select id="site_select">
-            {% for site in sites %}
-                <option value="{{ site.site_number }}">{{ site.site_number }}</option>
-            {% endfor %}
-        </select>
     </div>
     <br />
     <div id="calendar"></div>
