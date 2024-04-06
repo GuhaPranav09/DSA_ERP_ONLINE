@@ -36,7 +36,7 @@
                     eventLimit: true,
                     events: function(start, end, timezone, callback) {
                         $.ajax({
-                            url: '/m_calendar_events/',
+                            url: '/m_calendar_events',
                             success: function(data) {
                                 var events = [];
                                 $.each(data, function(index, item) {

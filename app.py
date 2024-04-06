@@ -943,7 +943,7 @@ def d_graph_data():
 def m_calendar():
     return render_template('m_calendar.html')
 
-@app.route('/m_calendar_events/<sitenum>')
+@app.route('/m_calendar_events')
 def m_calendar_events():
     global sitenum
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -952,7 +952,7 @@ def m_calendar_events():
                 UNION ALL
                 SELECT DOB AS date, SUM(Price) AS total_amount FROM purchase WHERE Site = %s GROUP BY DOB
               ) AS combined_data GROUP BY date''', (sitenum, sitenum))
-    calendar = cursor.fetchall()
+    m_calendar = cursor.fetchall()
     return jsonify(m_calendar)
 
 #d_calendar
