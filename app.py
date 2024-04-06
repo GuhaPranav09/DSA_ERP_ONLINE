@@ -5,6 +5,7 @@ from flask.json import jsonify
 import MySQLdb.cursors
 import os
 import json
+
 app = Flask(__name__)
 
 app.secret_key = 'pass'
@@ -22,7 +23,6 @@ DB_USER = "ConsultancyERP"
 DB_PASS = "AzureSQL123"
 DB_NAME = "vitproject"
 
-conn = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB_NAME)
 
 @app.route('/')
 def home():
