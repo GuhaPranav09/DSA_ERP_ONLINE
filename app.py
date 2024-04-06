@@ -5,8 +5,6 @@ from flask.json import jsonify
 import MySQLdb.cursors
 import os
 import json
-import pymysql
-
 app = Flask(__name__)
 
 app.secret_key = 'pass'
@@ -958,20 +956,20 @@ def m_calendar_events():
 #d_calendar
 @app.route('/calendar')
 def index():
-    cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute("SELECT DISTINCT Site as site_number FROM expenditure")
-    sites = cur.fetchall()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT DISTINCT Site as site_number FROM expenditure")
+    sites = cursor.fetchall()
     return render_template('calendar.html', sites=sites)
 
 @app.route('/calendar_events/<site_number>')
 def calendar_events(site_number):
-    cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute('''SELECT date, SUM(total_amount) AS total_amount FROM (
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('''SELECT date, SUM(total_amount) AS total_amount FROM (
                 SELECT DOB AS date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB
                 UNION ALL
                 SELECT DOB AS date, SUM(Price) AS total_amount FROM purchase WHERE Site = %s GROUP BY DOB
               ) AS combined_data GROUP BY date''', (site_number, site_number))
-    calendar = cur.fetchall()
+    calendar = cursor.fetchall()
     return jsonify(calendar)
 
 if __name__ == '__main__':
