@@ -952,7 +952,7 @@ def m_calendar_events():
                 UNION ALL
                 SELECT DOB AS date, SUM(Price) AS total_amount FROM purchase WHERE Site = %s GROUP BY DOB
               ) AS combined_data GROUP BY date''', (sitenum, sitenum))
-    calendar = cur.fetchall()
+    calendar = cursor.fetchall()
     return jsonify(m_calendar)
 
 #d_calendar
