@@ -945,11 +945,25 @@ def m_calendar():
 def m_calendar_events():
     global sitenum
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('''SELECT date, SUM(total_amount) AS total_amount FROM (
-                SELECT DOB AS date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB
-                UNION ALL
-                SELECT DOB AS date, SUM(Price) AS total_amount FROM purchase WHERE Site = %s GROUP BY DOB
-              ) AS combined_data GROUP BY date''', (sitenum, sitenum))
+    cursor.execute('''SELECT date,
+       SUM(total_amount_expenditure) AS total_amount_expenditure,
+       SUM(total_amount_purchase) AS total_amount_purchase
+FROM (
+    SELECT DOB AS date,
+           SUM(Amount) AS total_amount_expenditure,
+           0 AS total_amount_purchase
+    FROM expenditure
+    WHERE Site = %s
+    GROUP BY DOB
+    UNION ALL
+    SELECT DOB AS date,
+           0 AS total_amount_expenditure,
+           SUM(Price) AS total_amount_purchase
+    FROM purchase
+    WHERE Site = %s
+    GROUP BY DOB
+) AS combined_data
+GROUP BY date''', (sitenum, sitenum))
     m_calendar = cursor.fetchall()
     return jsonify(m_calendar)
 
@@ -964,11 +978,25 @@ def index():
 @app.route('/calendar_events/<site_number>')
 def calendar_events(site_number):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('''SELECT date, SUM(total_amount) AS total_amount FROM (
-                SELECT DOB AS date, SUM(Amount) AS total_amount FROM expenditure WHERE Site = %s GROUP BY DOB
-                UNION ALL
-                SELECT DOB AS date, SUM(Price) AS total_amount FROM purchase WHERE Site = %s GROUP BY DOB
-              ) AS combined_data GROUP BY date''', (site_number, site_number))
+    cursor.execute('''SELECT date,
+       SUM(total_amount_expenditure) AS total_amount_expenditure,
+       SUM(total_amount_purchase) AS total_amount_purchase
+FROM (
+    SELECT DOB AS date,
+           SUM(Amount) AS total_amount_expenditure,
+           0 AS total_amount_purchase
+    FROM expenditure
+    WHERE Site = %s
+    GROUP BY DOB
+    UNION ALL
+    SELECT DOB AS date,
+           0 AS total_amount_expenditure,
+           SUM(Price) AS total_amount_purchase
+    FROM purchase
+    WHERE Site = %s
+    GROUP BY DOB
+) AS combined_data
+GROUP BY date''', (site_number, site_number))
     calendar = cursor.fetchall()
     return jsonify(calendar)
 
