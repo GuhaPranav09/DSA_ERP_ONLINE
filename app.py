@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, request, jsonify
+from flask import Flask, render_template, request, session, jsonify
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from flask.json import jsonify
@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 app.secret_key = 'pass'
 
-app.config['MYSQL_HOST'] = 'consultancysql.mysql.database.azure.com'
+app.config['MYSQL_HOST'] = 'alusql.mysql.database.azure.com'
 app.config['MYSQL_USER'] = 'ConsultancyERP'
 app.config['MYSQL_PASSWORD'] = 'AzureSQL123'
 app.config['MYSQL_DB'] = 'vitproject'
@@ -18,7 +18,7 @@ app.config['MYSQL_DB'] = 'vitproject'
 
 mysql = MySQL(app)
 
-DB_HOST = "consultancysql.mysql.database.azure.com"
+DB_HOST = "alusql.mysql.database.azure.com"
 DB_USER = "ConsultancyERP"
 DB_PASS = "AzureSQL123"
 DB_NAME = "vitproject"
