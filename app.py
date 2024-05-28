@@ -1001,5 +1001,8 @@ GROUP BY date''', (site_number, site_number))
     calendar = cursor.fetchall()
     return jsonify(calendar)
 
+@app.route('/streamlit')
+def streamlit():
+    st.set_page_config(page_title="My Streamlit App")
 if __name__ == '__main__':
     app.run(debug=True)
