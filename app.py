@@ -5,7 +5,6 @@ from flask.json import jsonify
 import MySQLdb.cursors
 import os
 import json
-import streamlit as st
 
 app = Flask(__name__)
 
@@ -1001,8 +1000,6 @@ GROUP BY date''', (site_number, site_number))
     calendar = cursor.fetchall()
     return jsonify(calendar)
 
-@app.route('/streamlit')
-def streamlit():
-    st.set_page_config(page_title="My Streamlit App")
+
 if __name__ == '__main__':
     app.run(debug=True)
